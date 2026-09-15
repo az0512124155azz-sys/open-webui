@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Iterable
+from collections.abc import Iterable
 
 from open_webui.internal.db import get_async_db_context
 from open_webui.retrieval.vector.async_client import ASYNC_VECTOR_DB_CLIENT
