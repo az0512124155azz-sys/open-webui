@@ -16,7 +16,7 @@
 	import ChatBubble from '../icons/ChatBubble.svelte';
 	import Folder from '../icons/Folder.svelte';
 
-	const i18n = getContext('i18n');
+	const i18n: any = getContext('i18n');
 	const dispatch = createEventDispatcher();
 
 	export let className = 'w-60';
@@ -26,7 +26,7 @@
 	export let dismissible = false;
 	export let modal = false;
 	export let loading = false;
-	export let item = null;
+	export let item: any = null;
 	export let edit = false;
 	export let small = false;
 	export let name: string;
