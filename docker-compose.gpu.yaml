@@ -1,6 +1,10 @@
 services:
   ollama:
     # GPU support
+    environment:
+      - 'OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE--1}'
+      - 'OLLAMA_FLASH_ATTENTION=${OLLAMA_FLASH_ATTENTION-1}'
+      - 'OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL-2}'
     deploy:
       resources:
         reservations:
