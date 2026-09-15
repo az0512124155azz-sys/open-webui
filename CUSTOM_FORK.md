@@ -1,6 +1,6 @@
 # Custom Open WebUI Fork v1
 
-This branch keeps Open WebUI's existing architecture and adds a focused set of local-first features: Ollama performance controls, automatic Hebrew/English translation, chat-scoped memory privacy, a cleaner chat layout, richer file previews, and local 3D/STL workflows.
+This branch preserves Open WebUI's original interface and architecture while adding focused local-first features: Ollama performance controls, automatic Hebrew/English translation, chat-scoped memory privacy, richer file previews, and local 3D/STL workflows.
 
 ## Quick start
 
@@ -76,7 +76,7 @@ The backend also exposes a chat-scoped memory count endpoint and a strict delete
 
 ## Interface design
 
-`static/custom.css` provides a restrained GPT-style visual layer without changing Open WebUI branding or product identifiers. It keeps the main conversation width focused, reduces card/border noise, improves sidebar selection states, and preserves mobile and dark-mode behavior.
+The original Open WebUI design, navigation, dark mode, mobile layout, and visual language are intentionally preserved. Custom controls are added inside the existing Open WebUI settings, dialogs, file cards, and chat actions rather than applying a global redesign.
 
 ## File previews
 
