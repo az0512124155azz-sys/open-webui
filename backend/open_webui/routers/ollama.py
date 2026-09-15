@@ -49,9 +49,7 @@ async def _performance_values() -> dict[str, Any]:
         'OLLAMA_FLASH_ATTENTION': (
             flash_attention if flash_attention is not None else _env_bool('OLLAMA_FLASH_ATTENTION', True)
         ),
-        'OLLAMA_NUM_PARALLEL': int(
-            num_parallel if num_parallel is not None else os.getenv('OLLAMA_NUM_PARALLEL', '2')
-        ),
+        'OLLAMA_NUM_PARALLEL': int(num_parallel if num_parallel is not None else os.getenv('OLLAMA_NUM_PARALLEL', '2')),
     }
 
 
