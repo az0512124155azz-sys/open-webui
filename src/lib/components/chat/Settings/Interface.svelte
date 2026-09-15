@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher, getContext } from 'svelte';
 	import InterfaceSettings from '$lib/components/common/InterfaceSettings.svelte';
+	import TranslationSettings from '$lib/components/chat/Settings/Interface/TranslationSettings.svelte';
 
 	const dispatch = createEventDispatcher();
 	const i18n: any = getContext('i18n');
@@ -9,6 +10,7 @@
 	export let personalSettingsValue: Record<string, any> = {};
 
 	let interfaceSettings: any;
+	let translationSettings: any;
 </script>
 
 <form
@@ -16,6 +18,7 @@
 	class="flex flex-col h-full justify-between text-sm"
 	on:submit|preventDefault={async () => {
 		await interfaceSettings?.save();
+		await translationSettings?.save();
 		dispatch('save');
 	}}
 >
@@ -23,6 +26,7 @@
 
 	<div class="flex-1 min-h-0 overflow-y-auto scrollbar-hover pr-1.5">
 		<InterfaceSettings bind:this={interfaceSettings} {saveSettings} {personalSettingsValue} />
+		<TranslationSettings bind:this={translationSettings} />
 	</div>
 
 	<div class="shrink-0 flex justify-end text-sm font-normal">
