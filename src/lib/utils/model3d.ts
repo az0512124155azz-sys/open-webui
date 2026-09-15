@@ -21,7 +21,7 @@ const parseBinaryStl = (buffer: ArrayBuffer): Triangle3D[] => {
 	const triangles: Triangle3D[] = [];
 	let offset = 84;
 	for (let i = 0; i < triangleCount; i += 1) {
-		offset += 12; // normal
+		offset += 12;
 		const vertices: Vec3[] = [];
 		for (let vertex = 0; vertex < 3; vertex += 1) {
 			vertices.push([
@@ -31,7 +31,7 @@ const parseBinaryStl = (buffer: ArrayBuffer): Triangle3D[] => {
 			]);
 			offset += 12;
 		}
-		offset += 2; // attribute byte count
+		offset += 2;
 		triangles.push(vertices as Triangle3D);
 	}
 	return triangles;
@@ -54,13 +54,19 @@ const parseAsciiStl = (text: string): Triangle3D[] => {
 
 export const parseStl = (data: ArrayBuffer | Uint8Array | string): Triangle3D[] => {
 	if (typeof data !== 'string') {
-		const buffer = data instanceof Uint8Array
-			? data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
-			: data;
+		let buffer: ArrayBuffer;
+		if (data instanceof Uint8Array) {
+			const bytes = new Uint8Array(data.byteLength);
+			bytes.set(data);
+			buffer = bytes.buffer;
+		} else {
+			buffer = data;
+		}
+
 		if (buffer.byteLength >= 84) {
 			const view = new DataView(buffer);
 			const count = view.getUint32(80, true);
-			if (84 + count * 50 === buffer.byteLength) {
+			if (84 + count * 50 <= buffer.byteLength) {
 				const binary = parseBinaryStl(buffer);
 				if (binary.length) return binary;
 			}
@@ -100,7 +106,10 @@ export const parseObj = (data: ArrayBuffer | Uint8Array | string): Triangle3D[] 
 	return triangles;
 };
 
-export const parseModel3d = (name: string, data: ArrayBuffer | Uint8Array | string): Triangle3D[] => {
+export const parseModel3d = (
+	name: string,
+	data: ArrayBuffer | Uint8Array | string
+): Triangle3D[] => {
 	const ext = fileExtension(name);
 	if (ext === 'stl') return parseStl(data);
 	if (ext === 'obj') return parseObj(data);
@@ -125,7 +134,9 @@ export const trianglesToAsciiStl = (name: string, triangles: Triangle3D[]) => {
 		const normal = normalize(cross(sub(b, a), sub(c, a)));
 		lines.push(`  facet normal ${normal[0]} ${normal[1]} ${normal[2]}`);
 		lines.push('    outer loop');
-		for (const vertex of [a, b, c]) lines.push(`      vertex ${vertex[0]} ${vertex[1]} ${vertex[2]}`);
+		for (const vertex of [a, b, c]) {
+			lines.push(`      vertex ${vertex[0]} ${vertex[1]} ${vertex[2]}`);
+		}
 		lines.push('    endloop');
 		lines.push('  endfacet');
 	}
@@ -138,12 +149,34 @@ export const modelBounds = (triangles: Triangle3D[]) => {
 	let max: Vec3 = [-Infinity, -Infinity, -Infinity];
 	for (const triangle of triangles) {
 		for (const vertex of triangle) {
-			min = [Math.min(min[0], vertex[0]), Math.min(min[1], vertex[1]), Math.min(min[2], vertex[2])];
-			max = [Math.max(max[0], vertex[0]), Math.max(max[1], vertex[1]), Math.max(max[2], vertex[2])];
+			min = [
+				Math.min(min[0], vertex[0]),
+				Math.min(min[1], vertex[1]),
+				Math.min(min[2], vertex[2])
+			];
+			max = [
+				Math.max(max[0], vertex[0]),
+				Math.max(max[1], vertex[1]),
+				Math.max(max[2], vertex[2])
+			];
 		}
 	}
-	if (!triangles.length) return { min: [0, 0, 0] as Vec3, max: [0, 0, 0] as Vec3, center: [0, 0, 0] as Vec3, radius: 1 };
-	const center: Vec3 = [(min[0] + max[0]) / 2, (min[1] + max[1]) / 2, (min[2] + max[2]) / 2];
-	const radius = Math.max(1e-6, Math.hypot(max[0] - min[0], max[1] - min[1], max[2] - min[2]) / 2);
+	if (!triangles.length) {
+		return {
+			min: [0, 0, 0] as Vec3,
+			max: [0, 0, 0] as Vec3,
+			center: [0, 0, 0] as Vec3,
+			radius: 1
+		};
+	}
+	const center: Vec3 = [
+		(min[0] + max[0]) / 2,
+		(min[1] + max[1]) / 2,
+		(min[2] + max[2]) / 2
+	];
+	const radius = Math.max(
+		1e-6,
+		Math.hypot(max[0] - min[0], max[1] - min[1], max[2] - min[2]) / 2
+	);
 	return { min, max, center, radius };
 };
