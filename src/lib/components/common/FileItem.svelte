@@ -35,6 +35,16 @@
 
 	let showModal = false;
 	$: enhancedFile = item?.type === 'file' && Boolean(item?.id);
+	$: typeLabel =
+		type === 'file' || type === 'filesystem'
+			? $i18n.t('File')
+			: type === 'note'
+				? $i18n.t('Note')
+				: type === 'doc'
+					? $i18n.t('Document')
+					: type === 'collection'
+						? $i18n.t('Collection')
+						: type;
 
 	const decodeString = (str: string) => {
 		try {
@@ -142,7 +152,7 @@
 			<div class="flex flex-col justify-center -space-y-0.5 px-2.5 w-full min-w-0">
 				<div class="dark:text-gray-100 text-sm font-normal line-clamp-1 mb-1 pr-7">{decodeString(name)}</div>
 				<div class="flex justify-between text-xs line-clamp-1 {($settings?.highContrastMode ?? false) ? 'text-gray-800 dark:text-gray-100' : 'text-gray-500'}">
-					<span>{type === 'file' || type === 'filesystem' ? $i18n.t('File') : type === 'note' ? $i18n.t('Note') : type === 'doc' ? $i18n.t('Document') : type === 'collection' ? $i18n.t('Collection') : type}</span>
+					<span>{typeLabel}</span>
 					{#if size}<span class="capitalize">{formatFileSize(size)}</span>{/if}
 				</div>
 			</div>
