@@ -1,0 +1,133 @@
+/* Custom Fork v1 — restrained ChatGPT-style visual polish.
+   This stylesheet intentionally changes layout/theme only and leaves Open WebUI branding intact. */
+
+:root {
+	--custom-chat-width: 48rem;
+	--custom-surface: #ffffff;
+	--custom-subtle: #f7f7f8;
+	--custom-border: rgba(0, 0, 0, 0.08);
+	--custom-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 28px rgba(0, 0, 0, 0.04);
+}
+
+html.dark {
+	--custom-surface: #171717;
+	--custom-subtle: #212121;
+	--custom-border: rgba(255, 255, 255, 0.09);
+	--custom-shadow: 0 1px 2px rgba(0, 0, 0, 0.22), 0 10px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* Main chat canvas */
+#chat-container,
+#note-chat-container {
+	background: var(--custom-surface);
+}
+
+#messages-container > div,
+#chat-container .messages-container > div {
+	max-width: var(--custom-chat-width);
+	margin-inline: auto;
+}
+
+/* Make message flow feel less card-heavy while preserving existing settings. */
+#chat-container .message-listitem,
+#note-chat-container .message-listitem {
+	border-radius: 0.9rem;
+}
+
+#chat-container .user-message,
+#chat-container .assistant-message,
+#note-chat-container .user-message,
+#note-chat-container .assistant-message {
+	line-height: 1.58;
+}
+
+/* Composer: floating, compact, neutral. */
+#chat-container form textarea,
+#chat-container form [contenteditable='true'],
+#note-chat-container form textarea,
+#note-chat-container form [contenteditable='true'] {
+	font-size: 0.9375rem;
+	line-height: 1.5;
+}
+
+#chat-container form:has(textarea),
+#chat-container form:has([contenteditable='true']),
+#note-chat-container form:has(textarea),
+#note-chat-container form:has([contenteditable='true']) {
+	max-width: calc(var(--custom-chat-width) + 2rem);
+	margin-inline: auto;
+}
+
+#chat-container form textarea:focus,
+#chat-container form [contenteditable='true']:focus,
+#note-chat-container form textarea:focus,
+#note-chat-container form [contenteditable='true']:focus {
+	outline: none;
+}
+
+/* Sidebar: quieter rows and less visual noise. */
+#sidebar-chat-item {
+	border-radius: 0.7rem !important;
+	min-height: 2rem;
+}
+
+#sidebar-chat-item.selected,
+#sidebar-chat-item[aria-current='page'] {
+	background: var(--custom-subtle) !important;
+}
+
+#sidebar-chat-item-menu button {
+	border-radius: 0.5rem;
+}
+
+/* Settings / dialogs / file cards */
+[role='dialog'] {
+	border-color: var(--custom-border);
+}
+
+button,
+input,
+textarea,
+select {
+	transition-property: background-color, border-color, color, opacity, box-shadow, transform;
+	transition-duration: 120ms;
+}
+
+/* Better focus visibility without the heavy default ring. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+	outline: 2px solid color-mix(in srgb, currentColor 28%, transparent);
+	outline-offset: 2px;
+}
+
+/* File previews and cards share a clean neutral surface. */
+.custom-file-preview,
+.custom-model-preview {
+	background: var(--custom-subtle);
+	border: 1px solid var(--custom-border);
+	box-shadow: var(--custom-shadow);
+}
+
+@media (max-width: 768px) {
+	:root {
+		--custom-chat-width: 100%;
+	}
+
+	#chat-container .message-listitem,
+	#note-chat-container .message-listitem {
+		border-radius: 0.65rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	button,
+	input,
+	textarea,
+	select {
+		transition: none !important;
+	}
+}
