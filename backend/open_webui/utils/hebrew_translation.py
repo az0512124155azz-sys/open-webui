@@ -178,7 +178,8 @@ class Filter:
         target_name = 'Hebrew' if target == 'he' else 'English'
         prompt = (
             f'Translate the following {source_name} text to {target_name}. '
-            'Return only the translation. Preserve Markdown markers, placeholders such as OWUIX0000X, emojis, and numbers exactly.\n\n'
+            'Return only the translation. Preserve Markdown markers, placeholders '
+            'such as OWUIX0000X, emojis, and numbers exactly.\n\n'
             f'{text}'
         )
         timeout = aiohttp.ClientTimeout(total=90)
