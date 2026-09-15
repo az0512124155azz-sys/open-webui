@@ -12,8 +12,8 @@
 	export let data: ArrayBuffer | string | null = null;
 	export let allowExport = true;
 
-	let canvas: HTMLCanvasElement;
-	let container: HTMLDivElement;
+	let canvas: HTMLCanvasElement | null = null;
+	let container: HTMLDivElement | null = null;
 	let triangles: Triangle3D[] = [];
 	let error = '';
 	let yaw = -0.55;
@@ -24,27 +24,14 @@
 	let lastY = 0;
 	let resizeObserver: ResizeObserver | null = null;
 
-	$: if (data !== null) {
-		try {
-			triangles = parseModel3d(filename, data);
-			error = triangles.length ? '' : 'No triangles were found in this model.';
-		} catch (e) {
-			triangles = [];
-			error = e instanceof Error ? e.message : 'Unable to parse this 3D model.';
-		}
-		queueMicrotask(draw);
-	}
-
 	const rotate = (v: Vec3, center: Vec3): Vec3 => {
-		let x = v[0] - center[0];
-		let y = v[1] - center[1];
-		let z = v[2] - center[2];
-
+		const x = v[0] - center[0];
+		const y = v[1] - center[1];
+		const z = v[2] - center[2];
 		const cy = Math.cos(yaw);
 		const sy = Math.sin(yaw);
 		const x1 = x * cy + z * sy;
 		const z1 = -x * sy + z * cy;
-
 		const cp = Math.cos(pitch);
 		const sp = Math.sin(pitch);
 		const y1 = y * cp - z1 * sp;
@@ -52,7 +39,7 @@
 		return [x1, y1, z2];
 	};
 
-	const draw = () => {
+	function draw() {
 		if (!canvas || !container) return;
 		const rect = container.getBoundingClientRect();
 		const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -66,8 +53,8 @@
 		if (!ctx) return;
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		ctx.clearRect(0, 0, width, height);
-
 		if (!triangles.length) return;
+
 		const { center, radius } = modelBounds(triangles);
 		const scale = (Math.min(width, height) * 0.39 * zoom) / radius;
 		const transformed = triangles.map((triangle) => {
@@ -95,7 +82,18 @@
 			ctx.lineWidth = 0.65;
 			ctx.stroke();
 		}
-	};
+	}
+
+	$: if (data !== null) {
+		try {
+			triangles = parseModel3d(filename, data);
+			error = triangles.length ? '' : 'No triangles were found in this model.';
+		} catch (e) {
+			triangles = [];
+			error = e instanceof Error ? e.message : 'Unable to parse this 3D model.';
+		}
+		queueMicrotask(draw);
+	}
 
 	const resetView = () => {
 		yaw = -0.55;
@@ -120,7 +118,7 @@
 		dragging = true;
 		lastX = event.clientX;
 		lastY = event.clientY;
-		canvas.setPointerCapture(event.pointerId);
+		canvas?.setPointerCapture(event.pointerId);
 	};
 	const pointerMove = (event: PointerEvent) => {
 		if (!dragging) return;
@@ -141,7 +139,7 @@
 
 	onMount(() => {
 		resizeObserver = new ResizeObserver(draw);
-		resizeObserver.observe(container);
+		if (container) resizeObserver.observe(container);
 		draw();
 	});
 
