@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Request
-from pydantic import BaseModel
-
 from open_webui.routers import memories_legacy as _legacy
 from open_webui.utils.auth import get_admin_user, get_verified_user
 from open_webui.utils.memory_chat_links import (
@@ -10,6 +8,7 @@ from open_webui.utils.memory_chat_links import (
     link_created_memories_to_chat,
     list_all_memories_with_sources,
 )
+from pydantic import BaseModel
 
 router = APIRouter()
 
