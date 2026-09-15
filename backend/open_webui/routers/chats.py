@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from open_webui.internal.db import get_async_session
 from open_webui.models.config import Config
 from open_webui.routers import chats_legacy as _legacy
@@ -11,6 +9,7 @@ from open_webui.utils.memory_chat_links import (
     count_memories_by_source_chat_id,
     delete_memories_for_chat,
 )
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
