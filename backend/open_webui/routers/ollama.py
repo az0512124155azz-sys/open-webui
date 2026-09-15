@@ -7,17 +7,16 @@ upstream implementation.
 
 from __future__ import annotations
 
+import datetime
 import os
-from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from fastapi import Depends, Request
-from pydantic import BaseModel, Field
-
 from open_webui.models.config import Config
+from open_webui.routers import ollama_legacy as _legacy
 from open_webui.utils.auth import get_admin_user
 from open_webui.utils.json_codec import JSONCodec
-from open_webui.routers import ollama_legacy as _legacy
+from pydantic import BaseModel, Field
 
 # Re-export the upstream router and public API. Module __getattr__ below keeps
 # imports from open_webui.routers.ollama backward compatible.
@@ -125,12 +124,12 @@ def _expiry_is_effectively_forever(expires_at: Any) -> bool:
     if not expires_at:
         return False
     try:
-        parsed = datetime.fromisoformat(str(expires_at).replace('Z', '+00:00'))
+        parsed = datetime.datetime.fromisoformat(str(expires_at).replace('Z', '+00:00'))
         if parsed.tzinfo is None:
-            parsed = parsed.replace(tzinfo=timezone.utc)
+            parsed = parsed.replace(tzinfo=datetime.UTC)
         # Ollama represents an indefinitely retained runner with a far-future
         # expiry. Ten years is safely beyond every normal keep-alive duration.
-        return parsed > datetime.now(timezone.utc) + timedelta(days=3650)
+        return parsed > datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=3650)
     except (TypeError, ValueError):
         return str(expires_at).lower() in {'forever', 'infinite', 'infinity'}
 
@@ -162,7 +161,8 @@ async def get_performance_diagnostics(
         'configured_forever': configured_forever,
         'finite_models': finite_models,
         'warning': (
-            'One or more loaded models have a finite expiry. Send a new inference request after enabling keep-loaded mode.'
+            'One or more loaded models have a finite expiry. Send a new inference '
+            'request after enabling keep-loaded mode.'
             if configured_forever and finite_models
             else None
         ),
