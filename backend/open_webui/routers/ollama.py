@@ -7,7 +7,7 @@ upstream implementation.
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import os
 from typing import Any
 
@@ -124,12 +124,12 @@ def _expiry_is_effectively_forever(expires_at: Any) -> bool:
     if not expires_at:
         return False
     try:
-        parsed = datetime.datetime.fromisoformat(str(expires_at).replace('Z', '+00:00'))
+        parsed = dt.datetime.fromisoformat(str(expires_at).replace('Z', '+00:00'))
         if parsed.tzinfo is None:
-            parsed = parsed.replace(tzinfo=datetime.UTC)
+            parsed = parsed.replace(tzinfo=dt.UTC)
         # Ollama represents an indefinitely retained runner with a far-future
         # expiry. Ten years is safely beyond every normal keep-alive duration.
-        return parsed > datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=3650)
+        return parsed > dt.datetime.now(dt.UTC) + dt.timedelta(days=3650)
     except (TypeError, ValueError):
         return str(expires_at).lower() in {'forever', 'infinite', 'infinity'}
 
