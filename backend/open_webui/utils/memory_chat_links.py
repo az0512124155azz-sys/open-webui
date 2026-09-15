@@ -62,11 +62,7 @@ async def delete_memories_for_chat(user_id: str, chat_id: str) -> dict:
         return {'count': 0, 'ids': []}
 
     async with get_async_db_context() as db:
-        await db.execute(
-            delete(_memory)
-            .where(_memory.c.user_id == user_id)
-            .where(_memory.c.source_chat_id == chat_id)
-        )
+        await db.execute(delete(_memory).where(_memory.c.user_id == user_id).where(_memory.c.source_chat_id == chat_id))
         await db.commit()
 
     try:
