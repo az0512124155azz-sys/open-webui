@@ -58,11 +58,24 @@
 		const filesystemPath = item?.type === 'filesystem' ? (item.path ?? item.url ?? item.id) : null;
 		if (filesystemPath) {
 			showFileNavPath.set(filesystemPath);
-		} else if (enhancedFile || item?.file?.data?.content || item?.type === 'file' || item?.content || modal) {
+		} else if (
+			enhancedFile ||
+			item?.file?.data?.content ||
+			item?.type === 'file' ||
+			item?.content ||
+			modal
+		) {
 			showModal = !showModal;
 		} else if (url) {
 			if (type === 'file') {
-				window.open(url.startsWith('http') ? `${url}/content` : `${WEBUI_API_BASE_URL}/files/${url}/content`, '_blank')?.focus();
+				window
+					.open(
+						url.startsWith('http')
+							? `${url}/content`
+							: `${WEBUI_API_BASE_URL}/files/${url}/content`,
+						'_blank'
+					)
+					?.focus();
 			} else {
 				window.open(url, '_blank')?.focus();
 			}
@@ -76,8 +89,11 @@
 		if (!id) return;
 		try {
 			const data = await getFileContentById(id);
+			if (!data) throw new Error('Unable to download file content.');
 			const blobUrl = URL.createObjectURL(
-				new Blob([data], { type: item?.meta?.content_type ?? item?.content_type ?? 'application/octet-stream' })
+				new Blob([data], {
+					type: item?.meta?.content_type ?? item?.content_type ?? 'application/octet-stream'
+				})
 			);
 			const anchor = document.createElement('a');
 			anchor.href = blobUrl;
@@ -86,7 +102,15 @@
 			URL.revokeObjectURL(blobUrl);
 		} catch {
 			const direct = item?.url ?? url;
-			if (direct) window.open(direct.startsWith('http') ? direct : `${WEBUI_API_BASE_URL}/files/${direct}/content`, '_blank')?.focus();
+			if (direct)
+				window
+					.open(
+						direct.startsWith('http')
+							? direct
+							: `${WEBUI_API_BASE_URL}/files/${direct}/content`,
+						'_blank'
+					)
+					?.focus();
 		}
 	};
 </script>
@@ -108,7 +132,9 @@
 		on:click={openItem}
 	>
 		{#if !small}
-			<div class="size-10 shrink-0 flex justify-center items-center bg-black/20 dark:bg-white/10 text-white rounded-xl">
+			<div
+				class="size-10 shrink-0 flex justify-center items-center bg-black/20 dark:bg-white/10 text-white rounded-xl"
+			>
 				{#if !loading}
 					<DocumentPage className="size-4.5" />
 				{:else}
@@ -150,23 +176,35 @@
 
 		{#if !small}
 			<div class="flex flex-col justify-center -space-y-0.5 px-2.5 w-full min-w-0">
-				<div class="dark:text-gray-100 text-sm font-normal line-clamp-1 mb-1 pr-7">{decodeString(name)}</div>
-				<div class="flex justify-between text-xs line-clamp-1 {($settings?.highContrastMode ?? false) ? 'text-gray-800 dark:text-gray-100' : 'text-gray-500'}">
+				<div class="dark:text-gray-100 text-sm font-normal line-clamp-1 mb-1 pr-7">
+					{decodeString(name)}
+				</div>
+				<div
+					class="flex justify-between text-xs line-clamp-1 {($settings?.highContrastMode ?? false)
+						? 'text-gray-800 dark:text-gray-100'
+						: 'text-gray-500'}"
+				>
 					<span>{typeLabel}</span>
 					{#if size}<span class="capitalize">{formatFileSize(size)}</span>{/if}
 				</div>
 			</div>
 		{:else}
-			<Tooltip content={decodeString(name)} className="flex min-w-0 flex-1 overflow-hidden" placement="top-start">
+			<Tooltip
+				content={decodeString(name)}
+				className="flex min-w-0 flex-1 overflow-hidden"
+				placement="top-start"
+			>
 				<div class="flex min-w-0 flex-1 items-center justify-between dark:text-gray-100">
 					<div class="min-w-0 flex-1 truncate pr-8 font-normal">{decodeString(name)}</div>
-					<div class="max-w-[35%] shrink-0 truncate text-[0.6875rem] capitalize text-gray-500">{size ? formatFileSize(size) : type}</div>
+					<div class="max-w-[35%] shrink-0 truncate text-[0.6875rem] capitalize text-gray-500">
+						{size ? formatFileSize(size) : type}
+					</div>
 				</div>
 			</Tooltip>
 		{/if}
 	</button>
 
-	{#if (type === 'file' && (item?.id || url)) && !loading && !edit}
+	{#if type === 'file' && (item?.id || url) && !loading && !edit}
 		<button
 			type="button"
 			class="absolute right-1.5 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-lg text-gray-400 opacity-0 transition hover:bg-black/5 hover:text-gray-700 group-hover:opacity-100 focus:opacity-100 dark:hover:bg-white/10 dark:hover:text-gray-200"
@@ -174,8 +212,19 @@
 			aria-label={$i18n.t('Download')}
 			title={$i18n.t('Download')}
 		>
-			<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" class="size-3.5" stroke-width="1.6" aria-hidden="true">
-				<path d="M10 2.5v9m0 0 3-3m-3 3-3-3M4 14.5v2h12v-2" stroke-linecap="round" stroke-linejoin="round" />
+			<svg
+				viewBox="0 0 20 20"
+				fill="none"
+				stroke="currentColor"
+				class="size-3.5"
+				stroke-width="1.6"
+				aria-hidden="true"
+			>
+				<path
+					d="M10 2.5v9m0 0 3-3m-3 3-3-3M4 14.5v2h12v-2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
 			</svg>
 		</button>
 	{/if}
@@ -184,7 +233,9 @@
 		<div class="absolute -top-1 -right-1">
 			<button
 				aria-label={$i18n.t('Remove File')}
-				class="bg-white text-black border border-gray-50 rounded-full {($settings?.highContrastMode ?? false) ? '' : 'hover-reveal transition'}"
+				class="bg-white text-black border border-gray-50 rounded-full {($settings?.highContrastMode ?? false)
+					? ''
+					: 'hover-reveal transition'}"
 				type="button"
 				on:click|stopPropagation={() => dispatch('dismiss')}
 			>
