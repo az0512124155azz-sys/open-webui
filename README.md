@@ -267,13 +267,13 @@ ollama run bionic/mistral-7b-instruct
 
 ### Model Comparison
 
-| Model              | Size | Speed | Quality   | Best For                     |
-| ------------------ | ---- | ----- | --------- | ---------------------------- |
-| Phi-2              | 2.7B | ⚡⚡⚡   | ★★★       | Light tasks, edge devices    |
-| Mistral-7B         | 7B   | ⚡⚡    | ★★★★      | General purpose, balanced    |
-| Neural Chat-7B     | 7B   | ⚡⚡    | ★★★★      | Conversational AI            |
-| Dolphin-Mixtral    | 45B  | ⚡     | ★★★★★     | Heavy computation, accuracy  |
-| Deepseek Coder-33B | 33B  | ⚡     | ★★★★★     | Code generation              |
+| Model              | Size | Speed  | Quality | Best For                    |
+| ------------------ | ---- | ------ | ------- | --------------------------- |
+| Phi-2              | 2.7B | ⚡⚡⚡ | ★★★     | Light tasks, edge devices   |
+| Mistral-7B         | 7B   | ⚡⚡   | ★★★★    | General purpose, balanced   |
+| Neural Chat-7B     | 7B   | ⚡⚡   | ★★★★    | Conversational AI           |
+| Dolphin-Mixtral    | 45B  | ⚡     | ★★★★★   | Heavy computation, accuracy |
+| Deepseek Coder-33B | 33B  | ⚡     | ★★★★★   | Code generation             |
 
 ---
 
