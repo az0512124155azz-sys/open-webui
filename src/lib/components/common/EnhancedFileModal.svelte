@@ -226,15 +226,7 @@
 				</div>
 			{:else if modelData !== null}
 				<Model3DPreview {filename} data={modelData} />
-			{:else if imageUrl !== null ||
-				videoUrl !== null ||
-				audioUrl !== null ||
-				pdfData !== null ||
-				sqliteData !== null ||
-				docxData !== null ||
-				textContent !== null ||
-				officeHtml !== null ||
-				officeSlides !== null}
+			{:else if imageUrl !== null || videoUrl !== null || audioUrl !== null || pdfData !== null || sqliteData !== null || docxData !== null || textContent !== null || officeHtml !== null || officeSlides !== null}
 				<FilePreview
 					selectedFile={filename}
 					fileLoading={false}
