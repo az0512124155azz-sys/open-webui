@@ -3,7 +3,7 @@
 	import {
 		modelBounds,
 		parseModel3d,
-		trianglesTo AsciiStl,
+		trianglesToAsciiStl,
 		type Triangle3D,
 		type Vec3
 	} from '$lib/utils/model3d';
