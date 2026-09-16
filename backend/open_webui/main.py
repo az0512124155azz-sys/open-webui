@@ -159,16 +159,19 @@ from open_webui.routers import (
     images,
     knowledge,
     memories,
+    model_intelligence,
     models,
     notes,
     notifications,
     ollama,
     openai,
     pipelines,
+    plugins,
     prompts,
     retrieval,
     scim,
     skills,
+    skills_ai,
     tasks,
     terminals,
     tools,
@@ -845,6 +848,9 @@ app.include_router(knowledge.router, prefix='/api/v1/knowledge', tags=['knowledg
 app.include_router(prompts.router, prefix='/api/v1/prompts', tags=['prompts'])
 app.include_router(tools.router, prefix='/api/v1/tools', tags=['tools'])
 app.include_router(skills.router, prefix='/api/v1/skills', tags=['skills'])
+app.include_router(skills_ai.router, prefix='/api/v1/skills', tags=['skills'])
+app.include_router(plugins.router, prefix='/api/v1/plugins', tags=['plugins'])
+app.include_router(model_intelligence.router, prefix='/api/v1/model-intelligence', tags=['model-intelligence'])
 
 app.include_router(memories.router, prefix='/api/v1/memories', tags=['memories'])
 app.include_router(folders.router, prefix='/api/v1/folders', tags=['folders'])
