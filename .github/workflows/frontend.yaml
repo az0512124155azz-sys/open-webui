@@ -13,7 +13,7 @@ on:
     paths-ignore: ['backend/**', 'pyproject.toml', 'uv.lock']
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: frontend-${{ github.ref }}
@@ -35,30 +35,13 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install --force
+        run: npm ci --force
 
       - name: Verify code formatting
         run: npm run format
 
       - name: Verify i18n strings
         run: npm run i18n:parse
-
-      - name: Synchronize generated files for custom fork branch
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'feature/custom-fork-v1'
-        shell: bash
-        run: |
-          if git diff --quiet; then
-            echo 'Generated files are already synchronized.'
-            exit 0
-          fi
-          echo 'Synchronizing generated/formatted frontend files:'
-          git status --short
-          git diff --stat
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src package.json package-lock.json i18next-parser.config.ts
-          git commit -m 'chore: synchronize formatted frontend and i18n files'
-          git push origin HEAD:feature/custom-fork-v1
 
       - name: Ensure working tree is clean
         shell: bash
