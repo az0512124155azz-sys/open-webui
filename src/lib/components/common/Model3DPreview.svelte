@@ -57,8 +57,8 @@
 
 		const { center, radius } = modelBounds(triangles);
 		const scale = (Math.min(width, height) * 0.39 * zoom) / radius;
-		const transformed = triangles.map((triangle) => {
-			const points = triangle.map((vertex) => rotate(vertex, center)) as Triangle3D;
+		const transformed = triangles.map((triangle: Triangle3D) => {
+			const points = triangle.map((vertex: Vec3) => rotate(vertex, center)) as Triangle3D;
 			return { points, depth: (points[0][2] + points[1][2] + points[2][2]) / 3 };
 		});
 		transformed.sort((a, b) => a.depth - b.depth);
@@ -145,7 +145,9 @@
 		draw();
 	});
 
-	onDestroy(() => resizeObserver?.disconnect());
+	onDestroy(() => {
+		resizeObserver?.disconnect();
+	});
 </script>
 
 <div
