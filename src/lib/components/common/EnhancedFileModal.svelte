@@ -210,7 +210,7 @@
 					type="button"
 					class="flex size-7 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
 					on:click={() => (show = false)}
-					aria-label={$i18n.t('Close')}
+					aria-label={$i18n.t('Close') ?? 'Close'}
 				>
 					<XMark className="size-4" />
 				</button>
@@ -226,7 +226,15 @@
 				</div>
 			{:else if modelData !== null}
 				<Model3DPreview {filename} data={modelData} />
-			{:else if imageUrl !== null || videoUrl !== null || audioUrl !== null || pdfData !== null || sqliteData !== null || docxData !== null || textContent !== null || officeHtml !== null || officeSlides !== null}
+			{:else if imageUrl !== null ||
+				videoUrl !== null ||
+				audioUrl !== null ||
+				pdfData !== null ||
+				sqliteData !== null ||
+				docxData !== null ||
+				textContent !== null ||
+				officeHtml !== null ||
+				officeSlides !== null}
 				<FilePreview
 					selectedFile={filename}
 					fileLoading={false}
