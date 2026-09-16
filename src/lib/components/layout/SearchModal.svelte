@@ -643,7 +643,7 @@
 				{/each}
 
 				{#if chatList}
-					<div aria-hidden="true" class="h-px my-3" />
+					<div aria-hidden="true" class="h-px my-3"></div>
 
 					{#if chatList.length === 0}
 						<div class="text-xs text-gray-500 dark:text-gray-400 text-center px-5 py-4">

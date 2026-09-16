@@ -1375,7 +1375,7 @@
 														});
 													});
 												}}
-											/>
+											></button>
 
 											<RegenerateMenu
 												onRegenerate={(prompt = null) => {

@@ -153,7 +153,7 @@
 										}
 									}}
 								>
-									<span class="size-1.5 rounded-full bg-green-500" />
+									<span class="size-1.5 rounded-full bg-green-500"></span>
 									<span>{usage.user_count}</span>
 								</div>
 							</Tooltip>
