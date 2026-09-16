@@ -10,9 +10,9 @@
 
 ---
 
-## 🎯 What's New in This Fork?
+## ✨ What's New in This Fork?
 
-### ✨ Core Enhancements
+### Core Enhancements
 
 - **🔧 Ollama Performance Optimization**
   - `OLLAMA_FLASH_ATTENTION=1` support for accelerated inference
@@ -27,7 +27,7 @@
   - Per-user translation preferences
   - Code block, URL, and path protection from translation
 
-- **🗑️ Smart Chat Memory Management**
+- **🗂️ Smart Chat Memory Management**
   - Linked memory deletion when chats are removed
   - `source_chat_id` tracking for memory provenance
   - Pre-deletion confirmation with memory count
@@ -46,7 +46,7 @@
   - Export models to STL format
   - Touch-friendly gesture controls
 
-### 🤖 Advanced AI Features (Planned)
+### Advanced AI Features (Planned)
 
 - **Smart Model Router** - Intelligent model selection based on task type
 - **Automatic Model Fallback** - Graceful degradation when models fail
@@ -176,7 +176,7 @@ volumes:
 
 ---
 
-## 🎛️ Configuration
+## ⚙️ Configuration
 
 ### Environment Variables
 
@@ -273,7 +273,7 @@ ollama run bionic/mistral-7b-instruct
 
 ---
 
-## 🔒 Security & Privacy
+## 🔐 Security & Privacy
 
 ✅ **Completely Local** - Models run on your machine, data never leaves your network  
 ✅ **No Telemetry** - Zero tracking or usage monitoring  
@@ -323,7 +323,7 @@ npm run check           # TypeScript checks
 
 ---
 
-## 📊 System Requirements
+## 💻 System Requirements
 
 ### Minimum
 - **CPU**: Intel i3 / AMD Ryzen 3 (or equivalent)
@@ -442,18 +442,18 @@ The original Open WebUI project is by [Timothy Jaeryang Baek](https://github.com
 - 🔄 CI/CD fixes
 
 ### Phase 2: Intelligence
-- 🎯 Smart Model Router
-- 🎯 Automatic fallback
-- 🎯 Context optimization
-- 🎯 Plugin system
-- 🎯 Skills framework
+- 🔧 Smart Model Router
+- 🔧 Automatic fallback
+- 🔧 Context optimization
+- 🔧 Plugin system
+- 🔧 Skills framework
 
 ### Phase 3: Enterprise
-- 🎯 Advanced RBAC
-- 🎯 Audit logging
-- 🎯 Multi-node scaling
-- 🎯 Enterprise SSO
-- 🎯 Compliance reporting
+- 🔧 Advanced RBAC
+- 🔧 Audit logging
+- 🔧 Multi-node scaling
+- 🔧 Enterprise SSO
+- 🔧 Compliance reporting
 
 ---
 

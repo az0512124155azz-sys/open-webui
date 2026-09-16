@@ -105,7 +105,9 @@
 	const exportStl = () => {
 		if (!triangles.length) return;
 		const baseName = filename.replace(/\.[^.]+$/, '') || 'model';
-		const blob = new Blob([trianglesToAsciiStl(baseName, triangles)], { type: 'model/stl' });
+		const blob = new Blob([trianglesToAsciiStl(baseName, triangles)], {
+			type: 'model/stl'
+		});
 		const url = URL.createObjectURL(blob);
 		const anchor = document.createElement('a');
 		anchor.href = url;
@@ -154,22 +156,26 @@
 	>
 		<div class="min-w-0 truncate text-xs text-gray-600 dark:text-gray-300">
 			{filename}
-			{#if triangles.length}<span class="text-gray-400"
-					>· {triangles.length.toLocaleString()} triangles</span
-				>{/if}
+			{#if triangles.length}
+				<span class="text-gray-400">· {triangles.length.toLocaleString()} triangles</span>
+			{/if}
 		</div>
 		<div class="flex items-center gap-1.5">
 			<button
 				type="button"
 				class="rounded-lg px-2 py-1 text-xs text-gray-500 hover:bg-black/5 dark:hover:bg-white/10"
-				on:click={resetView}>Reset view</button
+				on:click={resetView}
 			>
+				Reset view
+			</button>
 			{#if allowExport && triangles.length}
 				<button
 					type="button"
 					class="rounded-lg bg-black px-2.5 py-1 text-xs text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
-					on:click={exportStl}>Export STL</button
+					on:click={exportStl}
 				>
+					Export STL
+				</button>
 			{/if}
 		</div>
 	</div>
