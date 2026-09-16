@@ -168,6 +168,7 @@ from open_webui.routers import (
     openai,
     pipelines,
     plugins,
+    privacy_recovery,
     prompts,
     retrieval,
     scim,
@@ -841,6 +842,7 @@ app.include_router(users.router, prefix='/api/v1/users', tags=['users'])
 app.include_router(channels.router, prefix='/api/v1/channels', tags=['channels'])
 app.include_router(chats.router, prefix='/api/v1/chats', tags=['chats'])
 app.include_router(chat_intelligence.router, prefix='/api/v1/chat-intelligence', tags=['chat-intelligence'])
+app.include_router(privacy_recovery.router, prefix='/api/v1/privacy', tags=['privacy'])
 app.include_router(notes.router, prefix='/api/v1/notes', tags=['notes'])
 
 
