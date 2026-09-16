@@ -74,6 +74,33 @@ async def delete_memories_for_chat(user_id: str, chat_id: str) -> dict:
     return {'count': len(ids), 'ids': ids}
 
 
+async def delete_all_chat_linked_memories_for_user(user_id: str) -> dict:
+    """Delete every memory that was created from a chat for this user.
+
+    Manually-created memories (``source_chat_id`` is NULL) are preserved.
+    """
+    async with get_async_db_context() as db:
+        rows = (
+            await db.execute(
+                select(_memory).where(_memory.c.user_id == user_id).where(_memory.c.source_chat_id.is_not(None))
+            )
+        ).fetchall()
+        records = [_row_dict(row) for row in rows]
+        if not records:
+            return {'count': 0, 'ids': []}
+        ids = [record['id'] for record in records]
+        await db.execute(
+            delete(_memory).where(_memory.c.user_id == user_id).where(_memory.c.source_chat_id.is_not(None))
+        )
+        await db.commit()
+
+    try:
+        await ASYNC_VECTOR_DB_CLIENT.delete(collection_name=f'user-memory-{user_id}', ids=ids)
+    except Exception:
+        pass
+    return {'count': len(ids), 'ids': ids}
+
+
 async def list_all_memories_with_sources() -> list[dict]:
     async with get_async_db_context() as db:
         result = await db.execute(select(_memory).order_by(_memory.c.created_at.desc()))

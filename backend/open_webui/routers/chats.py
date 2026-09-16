@@ -7,6 +7,7 @@ from open_webui.routers import chats_legacy as _legacy
 from open_webui.utils.auth import get_verified_user
 from open_webui.utils.memory_chat_links import (
     count_memories_by_source_chat_id,
+    delete_all_chat_linked_memories_for_user,
     delete_memories_for_chat,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,10 +16,18 @@ router = APIRouter()
 
 
 def _user_setting_enabled(user) -> bool:
+    """Return True when the user opted into chat→memory delete cascade.
+
+    Open WebUI persists most UI toggles at the top level of ``user.settings``.
+    We also accept a nested ``ui.deleteChatMemories`` value for compatibility
+    with any older clients or manual config edits.
+    """
     settings = getattr(user, 'settings', None)
     if hasattr(settings, 'model_dump'):
         settings = settings.model_dump()
     settings = settings if isinstance(settings, dict) else {}
+    if settings.get('deleteChatMemories'):
+        return True
     ui = settings.get('ui') if isinstance(settings.get('ui'), dict) else {}
     return bool(ui.get('deleteChatMemories', False))
 
@@ -92,6 +101,19 @@ async def delete_chat_by_id(
     db: AsyncSession = Depends(get_async_session),
 ):
     return await _delete_chat_and_optionally_memories(request, id, user, db, force_memories=False)
+
+
+@router.delete('/', response_model=bool)
+async def delete_all_user_chats(
+    request: Request,
+    user=Depends(get_verified_user),
+    db: AsyncSession = Depends(get_async_session),
+):
+    """Delete all chats for the user, optionally cascading chat-linked memories."""
+    result = await _legacy.delete_all_user_chats(request, user, db)
+    if result and _user_setting_enabled(user):
+        await delete_all_chat_linked_memories_for_user(user.id)
+    return result
 
 
 router.include_router(_legacy.router)
