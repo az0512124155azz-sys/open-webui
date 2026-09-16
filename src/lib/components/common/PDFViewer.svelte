@@ -153,8 +153,7 @@
 
 		await tick();
 		const pageWrapper = sceneElement.querySelectorAll('.pdf-page-wrapper')[page - 1] as
-			| HTMLElement
-			| undefined;
+			HTMLElement | undefined;
 		pageWrapper?.scrollIntoView({ block: 'start' });
 		activePage = page;
 		onPageChange?.(page);
