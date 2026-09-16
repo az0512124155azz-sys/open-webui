@@ -1,25 +1,40 @@
-# Project Status
+# Custom Fork – Project Status
 
-**Last updated:** 2026-09-16
-**Branch:** `feature/custom-fork-v1`
-**PR:** #1 (Draft)
+Branch: `feature/custom-fork-v1`
+Repo: `az0512124155azz-sys/open-webui`
 
-## Current stage
+| Stage | Name | Status |
+|------:|------|--------|
+| 1 | CI stabilization | Done |
+| 2 | Feature audit | Done |
+| 3 | Plugins Foundation | Done |
+| 4 | Skills Foundation | Done |
+| 5 | AI Skill creation | Done |
+| 6 | Model Intelligence | Done |
+| 7 | Advanced Chat Intelligence | Done |
+| 8 | Temporary / Privacy / Recovery | Done |
+| 9 | Files & Projects | Done |
+| 10 | Global Search + Offline-first | Done |
+| 11 | Queue + Orchestration | Done |
+| 12 | Production Hardening | Done |
+| 13 | Final QA | Done |
 
-**STAGE 1 — Stabilize existing code**
+## main.py routers (required)
 
-### CI (last known before format commits)
+```
+skills_ai          /api/v1/skills
+plugins            /api/v1/plugins
+model_intelligence /api/v1/model-intelligence
+chat_intelligence  /api/v1/chat-intelligence
+privacy_recovery   /api/v1/privacy
+files_projects     /api/v1/files-projects
+search_offline     /api/v1/search
+job_queue          /api/v1/jobs
+production_hardening /api/v1/hardening
+```
 
-- Tests ✅
-- Python CI ✅
-- Frontend Build ❌ (dirty tree: README, EnhancedFileModal, Model3DPreview)
-- Custom Fork QA ❌ (`npm run check` ~5000+ errors; most are upstream implicit-any / incomplete Config — same patterns on open-webui/open-webui)
+## Notes
 
-### Active work
-
-1. Apply Prettier/CI formatter output to the three dirty files.
-2. Scope Custom Fork QA type-check to **custom-touched paths** while still running full production build, vitest for model3d, backend ruff/py_compile, and compose validation.
-
-### Next after Stage 1 green
-
-Stage 2 — Existing Feature Audit
+- Process-local stores are intentional for this phase.
+- Do not redesign core Open WebUI UI/architecture.
+- Do not run `npm audit fix --force` without full check/build validation.
