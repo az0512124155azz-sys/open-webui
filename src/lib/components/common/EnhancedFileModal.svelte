@@ -39,17 +39,7 @@
 	$: key = `${item?.id ?? ''}:${filename}:${mime}`;
 	$: if (show && item?.id && key !== loadedKey && !loading) void loadPreview(key);
 
-	const imageExts = new Set([
-		'png',
-		'jpg',
-		'jpeg',
-		'gif',
-		'webp',
-		'bmp',
-		'ico',
-		'avif',
-		'svg'
-	]);
+	const imageExts = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', 'avif', 'svg']);
 	const videoExts = new Set(['mp4', 'webm', 'mov', 'ogv', 'm4v']);
 	const audioExts = new Set(['mp3', 'wav', 'ogg', 'oga', 'flac', 'm4a', 'aac', 'opus']);
 	const sqliteExts = new Set(['db', 'sqlite', 'sqlite3', 'db3']);
@@ -212,15 +202,13 @@
 				<button
 					type="button"
 					class="rounded-lg border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
-					on:click={download}
-				>{$i18n.t('Download')}</button
+					on:click={download}>{$i18n.t('Download')}</button
 				>
 				<button
 					type="button"
 					class="flex size-7 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
 					on:click={() => (show = false)}
-					aria-label={$i18n.t('Close')}
-				><XMark className="size-4" /></button
+					aria-label={$i18n.t('Close')}><XMark className="size-4" /></button
 				>
 			</div>
 		</div>
@@ -229,9 +217,7 @@
 			{#if loading}
 				<div class="flex h-full items-center justify-center"><Spinner className="size-5" /></div>
 			{:else if error}
-				<div
-					class="flex h-full items-center justify-center p-8 text-center text-sm text-red-500"
-				>
+				<div class="flex h-full items-center justify-center p-8 text-center text-sm text-red-500">
 					{error}
 				</div>
 			{:else if modelData !== null}
@@ -262,8 +248,7 @@
 					<button
 						type="button"
 						class="rounded-lg bg-black px-3 py-1.5 text-xs text-white dark:bg-white dark:text-black"
-						on:click={download}
-					>{$i18n.t('Download')}</button
+						on:click={download}>{$i18n.t('Download')}</button
 					>
 				</div>
 			{/if}

@@ -101,18 +101,27 @@
 		<div class="py-3 text-xs text-gray-500">Loading performance settings…</div>
 	{:else}
 		<div class="space-y-3">
-			<label class="flex items-start justify-between gap-4 rounded-xl border border-gray-100 p-3 dark:border-white/[0.06]">
+			<label
+				class="flex items-start justify-between gap-4 rounded-xl border border-gray-100 p-3 dark:border-white/[0.06]"
+			>
 				<div>
 					<div class="text-sm text-gray-800 dark:text-gray-200">Keep models loaded in memory</div>
-					<div class="mt-0.5 text-xs text-gray-500">Faster responses, higher RAM/VRAM usage. Enabled uses keep_alive = -1; disabled uses 5m.</div>
+					<div class="mt-0.5 text-xs text-gray-500">
+						Faster responses, higher RAM/VRAM usage. Enabled uses keep_alive = -1; disabled uses 5m.
+					</div>
 				</div>
 				<input class="mt-1" type="checkbox" bind:checked={keepModelsLoaded} />
 			</label>
 
-			<label class="flex items-start justify-between gap-4 rounded-xl border border-gray-100 p-3 dark:border-white/[0.06]">
+			<label
+				class="flex items-start justify-between gap-4 rounded-xl border border-gray-100 p-3 dark:border-white/[0.06]"
+			>
 				<div>
 					<div class="text-sm text-gray-800 dark:text-gray-200">Flash Attention</div>
-					<div class="mt-0.5 text-xs text-gray-500">Recommended on supported modern GPUs such as NVIDIA Ampere+ and AMD RDNA2+. Ollama server restart required.</div>
+					<div class="mt-0.5 text-xs text-gray-500">
+						Recommended on supported modern GPUs such as NVIDIA Ampere+ and AMD RDNA2+. Ollama
+						server restart required.
+					</div>
 				</div>
 				<input class="mt-1" type="checkbox" bind:checked={flashAttention} />
 			</label>
@@ -121,7 +130,10 @@
 				<div class="flex items-center justify-between gap-4">
 					<div>
 						<div class="text-sm text-gray-800 dark:text-gray-200">Parallel requests</div>
-						<div class="mt-0.5 text-xs text-gray-500">Recommended: 2–4. Higher values consume more VRAM/RAM and can cause OOM errors. Ollama server restart required.</div>
+						<div class="mt-0.5 text-xs text-gray-500">
+							Recommended: 2–4. Higher values consume more VRAM/RAM and can cause OOM errors. Ollama
+							server restart required.
+						</div>
 					</div>
 					<input
 						class="h-8 w-20 rounded-lg border border-gray-200 bg-transparent px-2 text-sm dark:border-white/10"
@@ -145,9 +157,13 @@
 
 	{#if diagnostics}
 		<div class="mt-4 rounded-xl bg-gray-50 p-3 dark:bg-white/[0.03]">
-			<div class="mb-2 text-xs font-medium text-gray-700 dark:text-gray-300">Loaded-model diagnostics</div>
+			<div class="mb-2 text-xs font-medium text-gray-700 dark:text-gray-300">
+				Loaded-model diagnostics
+			</div>
 			{#if diagnostics.warning}
-				<div class="mb-2 rounded-lg bg-amber-50 px-2.5 py-2 text-xs text-amber-800 dark:bg-amber-500/10 dark:text-amber-200">
+				<div
+					class="mb-2 rounded-lg bg-amber-50 px-2.5 py-2 text-xs text-amber-800 dark:bg-amber-500/10 dark:text-amber-200"
+				>
 					{diagnostics.warning}
 				</div>
 			{/if}

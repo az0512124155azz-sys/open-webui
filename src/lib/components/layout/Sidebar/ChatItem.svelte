@@ -394,10 +394,12 @@
 		}
 		if (!model) model = chatContent?.models?.at(0) ?? '';
 		chatTitle = '';
-		const generatedTitle = await generateTitle(localStorage.token, model, messages).catch((error) => {
-			toast.error(`${error}`);
-			return null;
-		});
+		const generatedTitle = await generateTitle(localStorage.token, model, messages).catch(
+			(error) => {
+				toast.error(`${error}`);
+				return null;
+			}
+		);
 		if (generatedTitle) {
 			if (generatedTitle !== title) editChatTitle(id, generatedTitle);
 			confirmEdit = false;
@@ -425,11 +427,22 @@
 	{/if}
 	{#if active}<div class="shrink-0 self-center pr-2"><Spinner className="size-3" /></div>{/if}
 	<div class="flex self-center flex-1 w-full min-w-0">
-		{#if unread}<div class="shrink-0 self-center pr-2.5 flex transition-opacity duration-300"><div class="size-1.5 bg-sky-500 rounded-full"></div></div>{/if}
-		<div dir="auto" class="text-left self-center overflow-hidden w-full h-5 truncate {unread ? 'font-normal text-gray-800 dark:text-gray-200' : ''} {($mobile || showInlineActions) && !readonly ? 'pr-12' : ''}">{title}</div>
+		{#if unread}<div class="shrink-0 self-center pr-2.5 flex transition-opacity duration-300">
+				<div class="size-1.5 bg-sky-500 rounded-full"></div>
+			</div>{/if}
+		<div
+			dir="auto"
+			class="text-left self-center overflow-hidden w-full h-5 truncate {unread
+				? 'font-normal text-gray-800 dark:text-gray-200'
+				: ''} {($mobile || showInlineActions) && !readonly ? 'pr-12' : ''}"
+		>
+			{title}
+		</div>
 	</div>
 	{#if (updatedAt ?? createdAt) && !showInlineActions && !($mobile && !readonly)}
-		<div class="shrink-0 self-center text-[0.625rem] text-gray-400 dark:text-gray-500 pl-2">{formatTimeAgo((updatedAt ?? createdAt) as number)}</div>
+		<div class="shrink-0 self-center text-[0.625rem] text-gray-400 dark:text-gray-500 pl-2">
+			{formatTimeAgo((updatedAt ?? createdAt) as number)}
+		</div>
 	{/if}
 {/snippet}
 
@@ -444,11 +457,16 @@
 		<div>{$i18n.t('This will delete')} <span class="font-normal">{title}</span>.</div>
 		{#if deleteMemoryCount > 0 && deleteCascadeEnabled}
 			<div class="font-medium text-red-500 dark:text-red-400">
-				{$i18n.t('{{COUNT}} linked memories will also be permanently deleted.', { COUNT: deleteMemoryCount })}
+				{$i18n.t('{{COUNT}} linked memories will also be permanently deleted.', {
+					COUNT: deleteMemoryCount
+				})}
 			</div>
 		{:else if deleteMemoryCount > 0}
 			<div class="text-gray-400">
-				{$i18n.t('{{COUNT}} linked memories will be kept because memory deletion is disabled in Data Controls.', { COUNT: deleteMemoryCount })}
+				{$i18n.t(
+					'{{COUNT}} linked memories will be kept because memory deletion is disabled in Data Controls.',
+					{ COUNT: deleteMemoryCount }
+				)}
 			</div>
 		{:else}
 			<div class="text-gray-400">{$i18n.t('No linked memories will be deleted.')}</div>
@@ -459,7 +477,10 @@
 {#if dragged && x && y}
 	<DragGhost {x} {y}>
 		<div class="bg-black/80 backdrop-blur-2xl px-2 py-1 rounded-lg w-fit max-w-40">
-			<div class="flex items-center gap-1"><ChatIcon className="size-[1.125rem]" strokeWidth="1.5" /><div class="text-xs text-white line-clamp-1">{title}</div></div>
+			<div class="flex items-center gap-1">
+				<ChatIcon className="size-[1.125rem]" strokeWidth="1.5" />
+				<div class="text-xs text-white line-clamp-1">{title}</div>
+			</div>
 		</div>
 	</DragGhost>
 {/if}
@@ -486,7 +507,9 @@
 					? ($settings?.highContrastMode ?? false)
 						? 'bg-black/[0.035] dark:bg-white/[0.055] selected'
 						: 'bg-black/[0.035] dark:bg-white/[0.045] selected'
-					: 'hover:bg-gray-100 dark:hover:bg-gray-900 group-hover:bg-gray-100 dark:group-hover:bg-gray-900'} whitespace-nowrap text-ellipsis relative transition {generating ? 'cursor-not-allowed' : ''}"
+					: 'hover:bg-gray-100 dark:hover:bg-gray-900 group-hover:bg-gray-100 dark:group-hover:bg-gray-900'} whitespace-nowrap text-ellipsis relative transition {generating
+				? 'cursor-not-allowed'
+				: ''}"
 		>
 			<input
 				id="chat-title-input-{id}"
@@ -507,30 +530,82 @@
 			/>
 		</div>
 	{:else if $mobile}
-		<a id="sidebar-chat-item" class={chatItemClass} href="/c/{id}" aria-current={id === $chatId ? 'page' : undefined} on:click={selectChatHandler} draggable="false">{@render chatItemContent()}</a>
+		<a
+			id="sidebar-chat-item"
+			class={chatItemClass}
+			href="/c/{id}"
+			aria-current={id === $chatId ? 'page' : undefined}
+			on:click={selectChatHandler}
+			draggable="false">{@render chatItemContent()}</a
+		>
 	{:else}
-		<LinkPreview.Root openDelay={300} closeDelay={0} disabled={confirmEdit || dragged || !($settings?.chatHoverPreview ?? true)} bind:open={openPreview}>
-			<LinkPreview.Trigger id="sidebar-chat-item" class={chatItemClass} href="/c/{id}" aria-current={id === $chatId ? 'page' : undefined} onclick={selectChatHandler} ondblclick={renameChatFromDoubleClick} draggable="false">{@render chatItemContent()}</LinkPreview.Trigger>
-			<ChatHoverPreview chatId={id} title={chatTitle || title} {openPreview} side="right" align="center" />
+		<LinkPreview.Root
+			openDelay={300}
+			closeDelay={0}
+			disabled={confirmEdit || dragged || !($settings?.chatHoverPreview ?? true)}
+			bind:open={openPreview}
+		>
+			<LinkPreview.Trigger
+				id="sidebar-chat-item"
+				class={chatItemClass}
+				href="/c/{id}"
+				aria-current={id === $chatId ? 'page' : undefined}
+				onclick={selectChatHandler}
+				ondblclick={renameChatFromDoubleClick}
+				draggable="false">{@render chatItemContent()}</LinkPreview.Trigger
+			>
+			<ChatHoverPreview
+				chatId={id}
+				title={chatTitle || title}
+				{openPreview}
+				side="right"
+				align="center"
+			/>
 		</LinkPreview.Root>
 	{/if}
 
 	{#if !readonly}
-		<div id="sidebar-chat-item-menu" class="{$mobile ? 'selected' : showInlineActions ? 'selected' : 'hover-reveal'} absolute {className === 'pr-2' ? 'right-[0.5rem]' : 'right-1'} inset-y-0 mr-1.5 flex items-center">
+		<div
+			id="sidebar-chat-item-menu"
+			class="{$mobile
+				? 'selected'
+				: showInlineActions
+					? 'selected'
+					: 'hover-reveal'} absolute {className === 'pr-2'
+				? 'right-[0.5rem]'
+				: 'right-1'} inset-y-0 mr-1.5 flex items-center"
+		>
 			{#if confirmEdit}
-				<div class="flex self-center items-center space-x-1.5 z-10 translate-y-[0.5px] -translate-x-[0.5px]">
+				<div
+					class="flex self-center items-center space-x-1.5 z-10 translate-y-[0.5px] -translate-x-[0.5px]"
+				>
 					<Tooltip content={$i18n.t('Generate')}>
-						<button class="flex size-5 items-center justify-center self-center dark:hover:text-white transition disabled:cursor-not-allowed" id="generate-title-button" disabled={generating} on:click={generateTitleHandler}><SparklesIcon strokeWidth="1.5" /></button>
+						<button
+							class="flex size-5 items-center justify-center self-center dark:hover:text-white transition disabled:cursor-not-allowed"
+							id="generate-title-button"
+							disabled={generating}
+							on:click={generateTitleHandler}><SparklesIcon strokeWidth="1.5" /></button
+						>
 					</Tooltip>
 				</div>
 			{:else if shiftKey && mouseOver}
 				<div class="flex items-center self-center space-x-1.5">
 					<Tooltip content={$i18n.t('Archive')} className="flex items-center">
-						<button class="flex size-5 items-center justify-center self-center dark:hover:text-white transition disabled:cursor-not-allowed" disabled={archiving} on:click={() => archiveChatHandler(id)} type="button"><ArchiveBoxIcon className="size-3.5" strokeWidth="1.7" /></button>
+						<button
+							class="flex size-5 items-center justify-center self-center dark:hover:text-white transition disabled:cursor-not-allowed"
+							disabled={archiving}
+							on:click={() => archiveChatHandler(id)}
+							type="button"><ArchiveBoxIcon className="size-3.5" strokeWidth="1.7" /></button
+						>
 					</Tooltip>
 					{#if $user?.role === 'admin' || ($user?.permissions?.chat?.delete ?? true)}
 						<Tooltip content={$i18n.t('Delete')}>
-							<button class="self-center dark:hover:text-white transition disabled:cursor-not-allowed" disabled={deleting || deleteCountLoading} on:click={openDeleteConfirm} type="button"><GarbageBinIcon className="size-3.5" strokeWidth="1.7" /></button>
+							<button
+								class="self-center dark:hover:text-white transition disabled:cursor-not-allowed"
+								disabled={deleting || deleteCountLoading}
+								on:click={openDeleteConfirm}
+								type="button"><GarbageBinIcon className="size-3.5" strokeWidth="1.7" /></button
+							>
 						</Tooltip>
 					{/if}
 				</div>
@@ -545,14 +620,31 @@
 						{renameHandler}
 						deleteHandler={openDeleteConfirm}
 						{markUnreadHandler}
-						onOpen={() => { menuOpen = true; dispatch('select'); }}
-						onClose={() => { menuOpen = false; dispatch('unselect'); }}
+						onOpen={() => {
+							menuOpen = true;
+							dispatch('select');
+						}}
+						onClose={() => {
+							menuOpen = false;
+							dispatch('unselect');
+						}}
 						onPinChange={async () => dispatch('change')}
 					>
-						<button type="button" aria-label="Chat Menu" class="flex size-5 items-center justify-center self-center dark:hover:text-white transition m-0"><MoreHorizontalIcon className="size-3.5" strokeWidth="2" /></button>
+						<button
+							type="button"
+							aria-label="Chat Menu"
+							class="flex size-5 items-center justify-center self-center dark:hover:text-white transition m-0"
+							><MoreHorizontalIcon className="size-3.5" strokeWidth="2" /></button
+						>
 					</ChatMenu>
 					{#if id === $chatId && ($user?.role === 'admin' || ($user?.permissions?.chat?.delete ?? true))}
-						<button id="delete-chat-button" aria-label={$i18n.t('Delete')} class="hidden" on:click={openDeleteConfirm}><MoreHorizontalIcon className="size-3.5" strokeWidth="2" /></button>
+						<button
+							id="delete-chat-button"
+							aria-label={$i18n.t('Delete')}
+							class="hidden"
+							on:click={openDeleteConfirm}
+							><MoreHorizontalIcon className="size-3.5" strokeWidth="2" /></button
+						>
 					{/if}
 				</div>
 			{/if}

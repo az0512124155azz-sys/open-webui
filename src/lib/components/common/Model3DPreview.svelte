@@ -146,15 +146,30 @@
 	onDestroy(() => resizeObserver?.disconnect());
 </script>
 
-<div class="custom-model-preview relative flex h-full min-h-72 w-full flex-col overflow-hidden rounded-xl">
-	<div class="flex h-9 shrink-0 items-center justify-between border-b border-black/5 px-3 dark:border-white/10">
+<div
+	class="custom-model-preview relative flex h-full min-h-72 w-full flex-col overflow-hidden rounded-xl"
+>
+	<div
+		class="flex h-9 shrink-0 items-center justify-between border-b border-black/5 px-3 dark:border-white/10"
+	>
 		<div class="min-w-0 truncate text-xs text-gray-600 dark:text-gray-300">
-			{filename} {#if triangles.length}<span class="text-gray-400">· {triangles.length.toLocaleString()} triangles</span>{/if}
+			{filename}
+			{#if triangles.length}<span class="text-gray-400"
+					>· {triangles.length.toLocaleString()} triangles</span
+				>{/if}
 		</div>
 		<div class="flex items-center gap-1.5">
-			<button type="button" class="rounded-lg px-2 py-1 text-xs text-gray-500 hover:bg-black/5 dark:hover:bg-white/10" on:click={resetView}>Reset view</button>
+			<button
+				type="button"
+				class="rounded-lg px-2 py-1 text-xs text-gray-500 hover:bg-black/5 dark:hover:bg-white/10"
+				on:click={resetView}>Reset view</button
+			>
 			{#if allowExport && triangles.length}
-				<button type="button" class="rounded-lg bg-black px-2.5 py-1 text-xs text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" on:click={exportStl}>Export STL</button>
+				<button
+					type="button"
+					class="rounded-lg bg-black px-2.5 py-1 text-xs text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+					on:click={exportStl}>Export STL</button
+				>
 			{/if}
 		</div>
 	</div>
@@ -170,10 +185,18 @@
 			on:wheel={wheel}
 		></canvas>
 		{#if error}
-			<div class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-gray-500">{error}</div>
+			<div
+				class="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-gray-500"
+			>
+				{error}
+			</div>
 		{/if}
 		{#if triangles.length}
-			<div class="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white/80 px-2.5 py-1 text-[0.65rem] text-gray-500 shadow-sm backdrop-blur dark:bg-black/60 dark:text-gray-400">Drag to rotate · wheel/pinch to zoom</div>
+			<div
+				class="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white/80 px-2.5 py-1 text-[0.65rem] text-gray-500 shadow-sm backdrop-blur dark:bg-black/60 dark:text-gray-400"
+			>
+				Drag to rotate · wheel/pinch to zoom
+			</div>
 		{/if}
 	</div>
 </div>

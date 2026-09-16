@@ -58,7 +58,8 @@
 	<div class="mb-4">
 		<h3 class="text-sm font-medium text-gray-900 dark:text-white">Translation</h3>
 		<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-			Automatically translate Hebrew prompts to English for the model and translate English responses back to Hebrew. Translation stays on your local machine.
+			Automatically translate Hebrew prompts to English for the model and translate English
+			responses back to Hebrew. Translation stays on your local machine.
 		</p>
 	</div>
 
@@ -68,8 +69,12 @@
 		<div class="space-y-4">
 			<label class="flex items-start justify-between gap-4">
 				<div>
-					<div class="text-sm text-gray-800 dark:text-gray-200">Enable automatic Hebrew translation</div>
-					<div class="mt-0.5 text-xs text-gray-500">Applies transparently before and/or after model inference.</div>
+					<div class="text-sm text-gray-800 dark:text-gray-200">
+						Enable automatic Hebrew translation
+					</div>
+					<div class="mt-0.5 text-xs text-gray-500">
+						Applies transparently before and/or after model inference.
+					</div>
 				</div>
 				<input class="mt-1 h-4 w-4" type="checkbox" bind:checked={enabled} />
 			</label>
@@ -121,8 +126,12 @@
 
 			<label class="flex items-start justify-between gap-4">
 				<div>
-					<div class="text-sm text-gray-800 dark:text-gray-200">Show original text alongside translation</div>
-					<div class="mt-0.5 text-xs text-gray-500">Adds the original English response in a collapsed “Show original” section.</div>
+					<div class="text-sm text-gray-800 dark:text-gray-200">
+						Show original text alongside translation
+					</div>
+					<div class="mt-0.5 text-xs text-gray-500">
+						Adds the original English response in a collapsed “Show original” section.
+					</div>
 				</div>
 				<input class="mt-1 h-4 w-4" type="checkbox" bind:checked={showOriginal} />
 			</label>

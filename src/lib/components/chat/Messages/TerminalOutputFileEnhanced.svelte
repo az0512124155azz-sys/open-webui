@@ -70,18 +70,35 @@
 {#if !model}
 	<TerminalOutputFile {item} {chatId} />
 {:else}
-	<div class="my-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/10 dark:bg-gray-950/20">
+	<div
+		class="my-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/10 dark:bg-gray-950/20"
+	>
 		<div class="flex h-8 items-center border-b border-gray-100 px-2.5 dark:border-white/10">
-			<button type="button" class="min-w-0 flex-1 truncate text-left text-xs font-medium" on:click={() => (expanded = !expanded)}>{name}</button>
-			<span class="mr-2 rounded bg-gray-100 px-1.5 py-0.5 text-[0.625rem] uppercase text-gray-500 dark:bg-gray-800">{fileExtension(name)}</span>
-			<button type="button" class="rounded px-2 py-1 text-[0.6875rem] text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800" on:click={downloadOriginal}>Download</button>
+			<button
+				type="button"
+				class="min-w-0 flex-1 truncate text-left text-xs font-medium"
+				on:click={() => (expanded = !expanded)}>{name}</button
+			>
+			<span
+				class="mr-2 rounded bg-gray-100 px-1.5 py-0.5 text-[0.625rem] uppercase text-gray-500 dark:bg-gray-800"
+				>{fileExtension(name)}</span
+			>
+			<button
+				type="button"
+				class="rounded px-2 py-1 text-[0.6875rem] text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+				on:click={downloadOriginal}>Download</button
+			>
 		</div>
 		{#if expanded}
 			<div class="h-96 max-h-[70vh] min-h-72 resize-y overflow-hidden bg-gray-50 dark:bg-gray-950">
 				{#if loading}
-					<div class="flex h-full items-center justify-center text-xs text-gray-500">Loading 3D model…</div>
+					<div class="flex h-full items-center justify-center text-xs text-gray-500">
+						Loading 3D model…
+					</div>
 				{:else if error}
-					<div class="flex h-full items-center justify-center p-5 text-xs text-red-500">{error}</div>
+					<div class="flex h-full items-center justify-center p-5 text-xs text-red-500">
+						{error}
+					</div>
 				{:else if modelData}
 					<Model3DPreview filename={name} data={modelData} />
 				{/if}

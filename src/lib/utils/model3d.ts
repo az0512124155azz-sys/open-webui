@@ -149,16 +149,8 @@ export const modelBounds = (triangles: Triangle3D[]) => {
 	let max: Vec3 = [-Infinity, -Infinity, -Infinity];
 	for (const triangle of triangles) {
 		for (const vertex of triangle) {
-			min = [
-				Math.min(min[0], vertex[0]),
-				Math.min(min[1], vertex[1]),
-				Math.min(min[2], vertex[2])
-			];
-			max = [
-				Math.max(max[0], vertex[0]),
-				Math.max(max[1], vertex[1]),
-				Math.max(max[2], vertex[2])
-			];
+			min = [Math.min(min[0], vertex[0]), Math.min(min[1], vertex[1]), Math.min(min[2], vertex[2])];
+			max = [Math.max(max[0], vertex[0]), Math.max(max[1], vertex[1]), Math.max(max[2], vertex[2])];
 		}
 	}
 	if (!triangles.length) {
@@ -169,14 +161,7 @@ export const modelBounds = (triangles: Triangle3D[]) => {
 			radius: 1
 		};
 	}
-	const center: Vec3 = [
-		(min[0] + max[0]) / 2,
-		(min[1] + max[1]) / 2,
-		(min[2] + max[2]) / 2
-	];
-	const radius = Math.max(
-		1e-6,
-		Math.hypot(max[0] - min[0], max[1] - min[1], max[2] - min[2]) / 2
-	);
+	const center: Vec3 = [(min[0] + max[0]) / 2, (min[1] + max[1]) / 2, (min[2] + max[2]) / 2];
+	const radius = Math.max(1e-6, Math.hypot(max[0] - min[0], max[1] - min[1], max[2] - min[2]) / 2);
 	return { min, max, center, radius };
 };

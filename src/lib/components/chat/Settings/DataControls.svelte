@@ -158,35 +158,73 @@
 
 		<UserSettingSection title={$i18n.t('Chats')}>
 			{#if $user?.role === 'admin' || ($user.permissions?.chat?.import ?? true)}
-				<UserSettingRow label={$i18n.t('Import Chats')} description={$i18n.t('Import chat history from a JSON export file.')}>
-					<button class={actionButtonClass} on:click={() => chatImportInputElement.click()} type="button">{$i18n.t('Import')}</button>
+				<UserSettingRow
+					label={$i18n.t('Import Chats')}
+					description={$i18n.t('Import chat history from a JSON export file.')}
+				>
+					<button
+						class={actionButtonClass}
+						on:click={() => chatImportInputElement.click()}
+						type="button">{$i18n.t('Import')}</button
+					>
 				</UserSettingRow>
 			{/if}
 
 			{#if $user?.role === 'admin' || ($user.permissions?.chat?.export ?? true)}
-				<UserSettingRow label={$i18n.t('Export Chats')} description={$i18n.t('Download your chat history as a JSON export file.')}>
-					<button class={actionButtonClass} on:click={exportChats} type="button">{$i18n.t('Export')}</button>
+				<UserSettingRow
+					label={$i18n.t('Export Chats')}
+					description={$i18n.t('Download your chat history as a JSON export file.')}
+				>
+					<button class={actionButtonClass} on:click={exportChats} type="button"
+						>{$i18n.t('Export')}</button
+					>
 				</UserSettingRow>
 			{/if}
 
-			<UserSettingRow label={$i18n.t('Shared Chats')} description={$i18n.t('Review and manage chats you have shared.')}>
-				<button class={actionButtonClass} on:click={() => (showSharedChatsModal = true)} type="button">{$i18n.t('Manage')}</button>
+			<UserSettingRow
+				label={$i18n.t('Shared Chats')}
+				description={$i18n.t('Review and manage chats you have shared.')}
+			>
+				<button
+					class={actionButtonClass}
+					on:click={() => (showSharedChatsModal = true)}
+					type="button">{$i18n.t('Manage')}</button
+				>
 			</UserSettingRow>
 
-			<UserSettingRow label={$i18n.t('Archive All Chats')} description={$i18n.t('Move every chat into the archive after confirmation.')}>
-				<button class={actionButtonClass} on:click={() => (showArchiveConfirmDialog = true)} type="button">{$i18n.t('Archive All')}</button>
+			<UserSettingRow
+				label={$i18n.t('Archive All Chats')}
+				description={$i18n.t('Move every chat into the archive after confirmation.')}
+			>
+				<button
+					class={actionButtonClass}
+					on:click={() => (showArchiveConfirmDialog = true)}
+					type="button">{$i18n.t('Archive All')}</button
+				>
 			</UserSettingRow>
 
 			{#if $user?.role === 'admin' || ($user?.permissions?.chat?.delete ?? true)}
-				<UserSettingRow label={$i18n.t('Delete All Chats')} description={$i18n.t('Permanently delete every chat after confirmation.')}>
-					<button class={actionButtonClass} on:click={() => (showDeleteConfirmDialog = true)} type="button">{$i18n.t('Delete All')}</button>
+				<UserSettingRow
+					label={$i18n.t('Delete All Chats')}
+					description={$i18n.t('Permanently delete every chat after confirmation.')}
+				>
+					<button
+						class={actionButtonClass}
+						on:click={() => (showDeleteConfirmDialog = true)}
+						type="button">{$i18n.t('Delete All')}</button
+					>
 				</UserSettingRow>
 			{/if}
 		</UserSettingSection>
 
 		<UserSettingSection title={$i18n.t('Files')}>
-			<UserSettingRow label={$i18n.t('Manage Files')} description={$i18n.t('Open the file manager for uploaded files.')}>
-				<button class={actionButtonClass} on:click={() => (showFilesModal = true)} type="button">{$i18n.t('Manage')}</button>
+			<UserSettingRow
+				label={$i18n.t('Manage Files')}
+				description={$i18n.t('Open the file manager for uploaded files.')}
+			>
+				<button class={actionButtonClass} on:click={() => (showFilesModal = true)} type="button"
+					>{$i18n.t('Manage')}</button
+				>
 			</UserSettingRow>
 		</UserSettingSection>
 	</div>
