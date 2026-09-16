@@ -171,6 +171,7 @@ from open_webui.routers import (
     pipelines,
     plugins,
     privacy_recovery,
+    production_hardening,
     prompts,
     retrieval,
     scim,
@@ -849,6 +850,7 @@ app.include_router(privacy_recovery.router, prefix='/api/v1/privacy', tags=['pri
 app.include_router(files_projects.router, prefix='/api/v1/files-projects', tags=['files-projects'])
 app.include_router(search_offline.router, prefix='/api/v1/search', tags=['search'])
 app.include_router(job_queue.router, prefix='/api/v1/jobs', tags=['jobs'])
+app.include_router(production_hardening.router, prefix='/api/v1/hardening', tags=['hardening'])
 app.include_router(notes.router, prefix='/api/v1/notes', tags=['notes'])
 
 
