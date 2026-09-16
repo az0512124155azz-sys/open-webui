@@ -43,7 +43,6 @@
 		if (sessionStorage.skill) {
 			const _skill = JSON.parse(sessionStorage.skill);
 			sessionStorage.removeItem('skill');
-
 			clone = true;
 			skill = {
 				name: _skill.name || 'Skill',
