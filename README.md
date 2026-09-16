@@ -104,6 +104,7 @@ ollama pull bionic/dolphin-2.6-mixtral-8x7b
 ```
 
 **Bionic Popular Models:**
+
 - Mistral 7B Instruct
 - Neural Chat 7B
 - Dolphin 2.6 Mixtral 8x7B
@@ -147,7 +148,7 @@ services:
   ollama:
     image: ollama/ollama:latest
     ports:
-      - "11434:11434"
+      - '11434:11434'
     volumes:
       - ollama:/root/.ollama
     environment:
@@ -158,7 +159,7 @@ services:
   open-webui:
     image: ghcr.io/az0512124155azz-sys/open-webui:latest
     ports:
-      - "3000:8080"
+      - '3000:8080'
     volumes:
       - open-webui:/app/backend/data
     environment:
@@ -213,6 +214,7 @@ ollama serve
 ## 🌟 Feature Highlights
 
 ### 3D Model Viewing
+
 - ✅ STL and OBJ format support
 - ✅ Interactive rotation, zoom, and pan
 - ✅ Real-time triangle count
@@ -220,6 +222,7 @@ ollama serve
 - ✅ Mobile-friendly touch gestures
 
 ### File Support
+
 - ✅ Images (PNG, JPG, JPEG, GIF, WebP, BMP, AVIF, SVG)
 - ✅ Videos (MP4, WebM, MOV, OGV)
 - ✅ Audio (MP3, WAV, OGG, FLAC, AAC, OPUS)
@@ -230,6 +233,7 @@ ollama serve
 - ✅ 3D Models (STL, OBJ)
 
 ### Translation Features
+
 - ✅ Automatic language detection
 - ✅ Hebrew ↔ English translation
 - ✅ Code block protection
@@ -263,23 +267,23 @@ ollama run bionic/mistral-7b-instruct
 
 ### Model Comparison
 
-| Model | Size | Speed | Quality | Best For |
-|-------|------|-------|---------|----------|
-| Phi-2 | 2.7B | ⚡⚡⚡ | ★★★ | Light tasks, edge devices |
-| Mistral-7B | 7B | ⚡⚡ | ★★★★ | General purpose, balanced |
-| Neural Chat-7B | 7B | ⚡⚡ | ★★★★ | Conversational AI |
-| Dolphin-Mixtral | 45B | ⚡ | ★★★★★ | Heavy computation, accuracy |
-| Deepseek Coder-33B | 33B | ⚡ | ★★★★★ | Code generation |
+| Model              | Size | Speed | Quality   | Best For                     |
+| ------------------ | ---- | ----- | --------- | ---------------------------- |
+| Phi-2              | 2.7B | ⚡⚡⚡   | ★★★       | Light tasks, edge devices    |
+| Mistral-7B         | 7B   | ⚡⚡    | ★★★★      | General purpose, balanced    |
+| Neural Chat-7B     | 7B   | ⚡⚡    | ★★★★      | Conversational AI            |
+| Dolphin-Mixtral    | 45B  | ⚡     | ★★★★★     | Heavy computation, accuracy  |
+| Deepseek Coder-33B | 33B  | ⚡     | ★★★★★     | Code generation              |
 
 ---
 
 ## 🔐 Security & Privacy
 
-✅ **Completely Local** - Models run on your machine, data never leaves your network  
-✅ **No Telemetry** - Zero tracking or usage monitoring  
-✅ **Open Source** - Full source code transparency  
-✅ **Encryption Ready** - Support for encrypted SQLite database  
-✅ **RBAC** - Role-based access control for multi-user setups  
+✅ **Completely Local** - Models run on your machine, data never leaves your network
+✅ **No Telemetry** - Zero tracking or usage monitoring
+✅ **Open Source** - Full source code transparency
+✅ **Encryption Ready** - Support for encrypted SQLite database
+✅ **RBAC** - Role-based access control for multi-user setups
 
 ---
 
@@ -326,12 +330,14 @@ npm run check           # TypeScript checks
 ## 💻 System Requirements
 
 ### Minimum
+
 - **CPU**: Intel i3 / AMD Ryzen 3 (or equivalent)
 - **RAM**: 8 GB (16 GB recommended for larger models)
 - **Storage**: 50 GB SSD (depends on models)
 - **OS**: Linux, macOS, or Windows (via WSL2)
 
 ### Recommended
+
 - **CPU**: Intel i7 / AMD Ryzen 7
 - **GPU**: NVIDIA RTX 3080+ or AMD RX 6800+ (for acceleration)
 - **RAM**: 32 GB
@@ -435,6 +441,7 @@ The original Open WebUI project is by [Timothy Jaeryang Baek](https://github.com
 ## 🚀 Roadmap
 
 ### Phase 1: Stability (Current)
+
 - ✅ Ollama optimization
 - ✅ Hebrew translation
 - ✅ 3D model support
@@ -442,6 +449,7 @@ The original Open WebUI project is by [Timothy Jaeryang Baek](https://github.com
 - 🔄 CI/CD fixes
 
 ### Phase 2: Intelligence
+
 - 🔧 Smart Model Router
 - 🔧 Automatic fallback
 - 🔧 Context optimization
@@ -449,6 +457,7 @@ The original Open WebUI project is by [Timothy Jaeryang Baek](https://github.com
 - 🔧 Skills framework
 
 ### Phase 3: Enterprise
+
 - 🔧 Advanced RBAC
 - 🔧 Audit logging
 - 🔧 Multi-node scaling
