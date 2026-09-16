@@ -28,12 +28,8 @@ jobs:
       - name: Svelte type check (custom paths)
         run: |
           set -euo pipefail
-          # Full-repo `npm run check` reports thousands of pre-existing upstream
-          # type errors (incomplete Config, implicit any). Same patterns exist on
-          # open-webui/open-webui. Gate Stage 1 on custom-touched paths only;
-          # production build still validates the full app compiles.
           npm run check > /tmp/svelte-check.log 2>&1 || true
-          CUSTOM_GLOBS='src/lib/utils/model3d|src/lib/components/common/EnhancedFileModal|src/lib/components/common/Model3DPreview|src/lib/components/chat/Settings/Interface/TranslationSettings|src/lib/components/admin/Settings/Connections/OllamaPerformance|src/lib/components/admin/Settings/Connections/ManageOllamaModal|src/lib/components/admin/Settings/Models/Manage/ManageOllama|src/lib/components/chat/Settings/DataControls|src/lib/components/chat/Messages/TerminalOutputFileEnhanced|src/lib/apis/chats/memory|src/lib/components/common/FileItem'
+          CUSTOM_GLOBS='src/lib/utils/model3d|src/lib/components/common/EnhancedFileModal|src/lib/components/common/Model3DPreview|src/lib/components/chat/Settings/Interface/TranslationSettings|src/lib/components/admin/Settings/Connections/OllamaPerformance|src/lib/components/admin/Settings/Connections/ManageOllamaModal|src/lib/components/admin/Settings/Models/Manage/ManageOllama|src/lib/components/chat/Settings/DataControls|src/lib/components/chat/Messages/TerminalOutputFileEnhanced|src/lib/apis/chats/memory|src/lib/components/common/FileItem|src/lib/apis/plugins|src/lib/apis/skills/generate|src/lib/apis/model-intelligence|src/lib/components/admin/Settings/Plugins|src/lib/components/admin/Settings/ModelIntelligence|src/lib/components/workspace/Skills/CreateSkillWithAI'
           if grep -E 'Error:' /tmp/svelte-check.log | grep -E "$CUSTOM_GLOBS" > /tmp/custom-errors.txt; then
             echo 'Custom-path svelte-check errors:'
             cat /tmp/custom-errors.txt
@@ -62,8 +58,13 @@ jobs:
           backend/open_webui/routers/chats.py
           backend/open_webui/routers/memories.py
           backend/open_webui/routers/ollama.py
+          backend/open_webui/routers/plugins.py
+          backend/open_webui/routers/skills_ai.py
+          backend/open_webui/routers/model_intelligence.py
           backend/open_webui/utils/hebrew_translation.py
           backend/open_webui/utils/memory_chat_links.py
+          backend/open_webui/utils/plugin_registry.py
+          backend/open_webui/utils/model_intelligence.py
           backend/open_webui/migrations/versions/c0f1a2b3c4d5_seed_hebrew_translation_filter.py
           backend/open_webui/migrations/versions/c0f1a2b3c4d6_add_memory_source_chat_id.py
       - name: Ruff custom backend files
@@ -72,10 +73,13 @@ jobs:
           backend/open_webui/routers/chats.py
           backend/open_webui/routers/memories.py
           backend/open_webui/routers/ollama.py
+          backend/open_webui/routers/plugins.py
+          backend/open_webui/routers/skills_ai.py
+          backend/open_webui/routers/model_intelligence.py
           backend/open_webui/utils/hebrew_translation.py
           backend/open_webui/utils/memory_chat_links.py
-          backend/open_webui/migrations/versions/c0f1a2b3c4d5_seed_hebrew_translation_filter.py
-          backend/open_webui/migrations/versions/c0f1a2b3c4d6_add_memory_source_chat_id.py
+          backend/open_webui/utils/plugin_registry.py
+          backend/open_webui/utils/model_intelligence.py
 
   compose:
     name: Compose validation
