@@ -154,10 +154,12 @@ from open_webui.routers import (
     configs,
     evaluations,
     files,
+    files_projects,
     folders,
     functions,
     groups,
     images,
+    job_queue,
     knowledge,
     memories,
     model_intelligence,
@@ -172,6 +174,7 @@ from open_webui.routers import (
     prompts,
     retrieval,
     scim,
+    search_offline,
     skills,
     skills_ai,
     tasks,
@@ -843,6 +846,9 @@ app.include_router(channels.router, prefix='/api/v1/channels', tags=['channels']
 app.include_router(chats.router, prefix='/api/v1/chats', tags=['chats'])
 app.include_router(chat_intelligence.router, prefix='/api/v1/chat-intelligence', tags=['chat-intelligence'])
 app.include_router(privacy_recovery.router, prefix='/api/v1/privacy', tags=['privacy'])
+app.include_router(files_projects.router, prefix='/api/v1/files-projects', tags=['files-projects'])
+app.include_router(search_offline.router, prefix='/api/v1/search', tags=['search'])
+app.include_router(job_queue.router, prefix='/api/v1/jobs', tags=['jobs'])
 app.include_router(notes.router, prefix='/api/v1/notes', tags=['notes'])
 
 
