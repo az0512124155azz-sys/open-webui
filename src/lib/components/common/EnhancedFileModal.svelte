@@ -202,14 +202,18 @@
 				<button
 					type="button"
 					class="rounded-lg border border-gray-200 px-2.5 py-1 text-xs hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
-					on:click={download}>{$i18n.t('Download')}</button
+					on:click={download}
 				>
+					{$i18n.t('Download')}
+				</button>
 				<button
 					type="button"
 					class="flex size-7 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
 					on:click={() => (show = false)}
-					aria-label={$i18n.t('Close')}><XMark className="size-4" /></button
+					aria-label={$i18n.t('Close')}
 				>
+					<XMark className="size-4" />
+				</button>
 			</div>
 		</div>
 
@@ -248,8 +252,10 @@
 					<button
 						type="button"
 						class="rounded-lg bg-black px-3 py-1.5 text-xs text-white dark:bg-white dark:text-black"
-						on:click={download}>{$i18n.t('Download')}</button
+						on:click={download}
 					>
+						{$i18n.t('Download')}
+					</button>
 				</div>
 			{/if}
 		</div>
