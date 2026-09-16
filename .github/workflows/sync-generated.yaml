@@ -1,0 +1,51 @@
+name: Sync Generated Frontend Files
+
+on:
+  push:
+    branches:
+      - feature/custom-fork-v1
+    paths:
+      - 'src/**'
+      - 'i18next-parser.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/sync-generated.yaml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feature/custom-fork-v1
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci --force
+
+      - name: Format frontend sources
+        run: npm run format
+
+      - name: Synchronize i18n catalogs
+        run: npm run i18n:parse
+
+      - name: Commit synchronized files
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'Generated files are already synchronized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src package.json package-lock.json i18next-parser.config.ts
+          git commit -m 'chore: synchronize formatted frontend and i18n files'
+          git push origin HEAD:feature/custom-fork-v1
