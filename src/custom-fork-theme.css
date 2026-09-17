@@ -1,89 +1,63 @@
-/* ChatGPT / Grok inspired theme */
+/* FORCE visible redesign */
 :root {
-	--fork-accent: #10a37f;
-	--fork-accent-2: #1a7f64;
-	--fork-bg: #212121;
-	--fork-sidebar: #171717;
-	--fork-surface: #2f2f2f;
-	--fork-border: rgba(255, 255, 255, 0.1);
-	--fork-text: #ececec;
-	--fork-muted: #8e8e8e;
-	--app-font-family: 'Inter', 'Vazirmatn', system-ui, sans-serif;
+	--fork-accent: #10a37f !important;
+	--fork-bg: #212121 !important;
+	--fork-sidebar: #171717 !important;
 }
 
 html.dark body,
 .dark body {
-	background: var(--fork-bg) !important;
-	color: var(--fork-text) !important;
+	background: #212121 !important;
+	background-color: #212121 !important;
+	color: #ececec !important;
 }
 
 html.dark aside,
 .dark aside,
 html.dark #sidebar,
 .dark #sidebar {
-	background: var(--fork-sidebar) !important;
-	border-inline-end: 1px solid var(--fork-border) !important;
-}
-
-html.dark #sidebar-chat-item:hover {
-	background: rgba(255, 255, 255, 0.06) !important;
-	border-radius: 0.75rem;
+	background: #171717 !important;
+	background-color: #171717 !important;
+	border-inline-end: 1px solid rgba(255,255,255,0.1) !important;
 }
 
 html.dark main,
 .dark main {
-	background: var(--fork-bg) !important;
-}
-
-html.dark textarea,
-.dark textarea {
-	background: var(--fork-surface) !important;
-	border: 1px solid var(--fork-border) !important;
-	border-radius: 1.25rem !important;
-	color: var(--fork-text) !important;
+	background: #212121 !important;
 }
 
 html.dark textarea:focus,
 .dark textarea:focus {
-	border-color: rgba(16, 163, 127, 0.55) !important;
-	box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.2) !important;
-	ooutline: none !important;
+	border-color: #10a37f !important;
+	box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.25) !important;
 }
 
 html.dark button.bg-blue-600,
 .dark .bg-blue-600 {
-	background: var(--fork-accent) !important;
-	color: #fff !important;
+	background-color: #10a37f !important;
+	background-image: none !important;
 	border-radius: 9999px !important;
 }
 
-html.dark button.bg-blue-600:hover,
-.dark .bg-blue-600:hover {
-	background: var(--fork-accent-2) !important;
+html.dark #sidebar-chat-item:hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+	border-radius: 0.75rem !important;
 }
 
 html.dark pre,
 html.dark .hljs {
 	background: #0d0d0d !important;
-	border: 1px solid var(--fork-border);
-	border-radius: 0.75rem;
+	border-radius: 0.75rem !important;
 }
 
-html.dark [role='dialog'] {
-	background: #2a2a2a !important;
-	border: 1px solid var(--fork-border) !important;
-	border-radius: 1rem !important;
-}
-
-html.dark ::selection {
-	background: rgba(16, 163, 127, 0.35);
-}
-
-html:not(.dark) body {
-	background: #ffffff !important;
-}
-
-html:not(.dark) textarea:focus {
-	border-color: var(--fork-accent) !important;
-	box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.15) !important;
+html.dark body::before {
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	background: linear-gradient(90deg, #10a37f, #7c3aed, #10a37f);
+	z-index: 99999;
+	pointer-events: none;
 }
