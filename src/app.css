@@ -13,7 +13,10 @@
 	font-display: swap;
 }
 
-/* --app-text-scale is updated via the UI Scale slider (Interface.svelte) */
+/* NOTE: Full original app.css styles remain in git history if needed.
+   Theme identity is in custom-fork-theme.css.
+   Critical utilities re-included below for stability. */
+
 :root {
 	--app-text-scale: 1;
 }
@@ -43,8 +46,110 @@ code {
 	width: auto;
 }
 
-/* remaining original styles preserved via custom-fork-theme overlay;
-   full app.css kept on branch — theme file is the design source of truth */
+.editor-selection {
+	background: rgba(180, 213, 255, 0.5);
+	border-radius: 2px;
+}
+
+.app-muted {
+	@apply text-gray-500 dark:text-gray-400;
+}
+
+.app-icon-muted {
+	@apply text-gray-500 dark:text-gray-400;
+}
+
+.app-interactive-active {
+	@apply bg-gray-50/40 dark:bg-gray-800/40;
+}
+
+.hover-reveal {
+	@apply opacity-0 pointer-events-none;
+}
+
+.group:hover .hover-reveal,
+.group:focus-within .hover-reveal {
+	@apply opacity-100 pointer-events-auto;
+}
+
+.marked a {
+	@apply underline;
+}
+
+.hljs {
+	@apply rounded-lg;
+}
+
+input::placeholder,
+textarea::placeholder {
+	direction: auto;
+}
+
+textarea {
+	color-scheme: light;
+}
+
+.dark textarea {
+	color-scheme: dark;
+}
+
+.markdown-prose {
+	@apply prose prose-sm dark:prose-invert max-w-none break-words !text-[0.9375rem] font-normal leading-relaxed;
+}
+
+.markdown a {
+	@apply underline;
+}
+
+.drag-region {
+	-webkit-app-region: drag;
+}
+
+.drag-region a,
+.drag-region button {
+	-webkit-app-region: no-drag;
+}
+
+.no-drag-region {
+	-webkit-app-region: no-drag;
+}
+
+::-webkit-scrollbar {
+	height: 0.45rem;
+	width: 0.45rem;
+}
+
+::-webkit-scrollbar-track {
+	background-color: transparent;
+	border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(215, 215, 215, 0.6);
+	border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+	background-color: rgba(67, 67, 67, 0.6);
+}
+
+.scrollbar-none {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+	display: none;
+}
+
+.ProseMirror {
+	@apply h-full min-h-fit max-h-full whitespace-pre-wrap;
+}
+
+.ProseMirror:focus {
+	ooutline: none;
+}
+
 body {
 	background: #fff;
 	color: #000;
