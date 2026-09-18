@@ -1,0 +1,8 @@
+/* Served at /static/custom.css without waiting on Vite for basic chrome */
+html.dark body { background-color: #212121 !important; }
+html.dark #sidebar, html.dark aside { background-color: #171717 !important; }
+html.dark body::before {
+  content: "";
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: #10a37f; z-index: 99999; pointer-events: none;
+}
