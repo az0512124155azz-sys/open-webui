@@ -1,63 +1,45 @@
-/* FORCE visible redesign */
+/* ChatGPT-inspired theme */
 :root {
-	--fork-accent: #10a37f !important;
-	--fork-bg: #212121 !important;
-	--fork-sidebar: #171717 !important;
+  --cgpt-sidebar: #171717;
+  --cgpt-main: #212121;
+  --cgpt-elevated: #2f2f2f;
+  --cgpt-text: #ececec;
+  --cgpt-accent: #10a37f;
+  --cgpt-accent-hover: #1a7f64;
+  --cgpt-border: rgba(255,255,255,0.1);
+  --cgpt-radius: 1.5rem;
 }
-
-html.dark body,
-.dark body {
-	background: #212121 !important;
-	background-color: #212121 !important;
-	color: #ececec !important;
+html.dark, .dark, html.dark body, .dark body {
+  background: var(--cgpt-main) !important;
+  background-color: var(--cgpt-main) !important;
+  color: var(--cgpt-text) !important;
 }
-
-html.dark aside,
-.dark aside,
-html.dark #sidebar,
-.dark #sidebar {
-	background: #171717 !important;
-	background-color: #171717 !important;
-	border-inline-end: 1px solid rgba(255,255,255,0.1) !important;
-}
-
-html.dark main,
-.dark main {
-	background: #212121 !important;
-}
-
-html.dark textarea:focus,
-.dark textarea:focus {
-	border-color: #10a37f !important;
-	box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.25) !important;
-}
-
-html.dark button.bg-blue-600,
-.dark .bg-blue-600 {
-	background-color: #10a37f !important;
-	background-image: none !important;
-	border-radius: 9999px !important;
-}
-
-html.dark #sidebar-chat-item:hover {
-	background: rgba(255, 255, 255, 0.08) !important;
-	border-radius: 0.75rem !important;
-}
-
-html.dark pre,
-html.dark .hljs {
-	background: #0d0d0d !important;
-	border-radius: 0.75rem !important;
-}
-
 html.dark body::before {
-	content: '';
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 3px;
-	background: linear-gradient(90deg, #10a37f, #7c3aed, #10a37f);
-	z-index: 99999;
-	pointer-events: none;
+  content: "";
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--cgpt-accent); z-index: 99999; pointer-events: none;
+}
+html.dark aside, .dark aside, html.dark #sidebar, .dark #sidebar {
+  background: var(--cgpt-sidebar) !important;
+  border-inline-end: 1px solid var(--cgpt-border) !important;
+}
+html.dark main, .dark main { background: var(--cgpt-main) !important; }
+html.dark textarea, .dark textarea {
+  background: var(--cgpt-elevated) !important;
+  border: 1px solid var(--cgpt-border) !important;
+  border-radius: var(--cgpt-radius) !important;
+  color: var(--cgpt-text) !important;
+}
+html.dark textarea:focus, .dark textarea:focus {
+  border-color: rgba(16,163,127,0.5) !important;
+  box-shadow: 0 0 0 2px rgba(16,163,127,0.2) !important;
+}
+html.dark button.bg-blue-600, .dark .bg-blue-600 {
+  background: var(--cgpt-accent) !important;
+  color: #fff !important;
+  border-radius: 9999px !important;
+}
+html.dark pre, html.dark .hljs {
+  background: #0d0d0d !important;
+  border-radius: 0.75rem !important;
 }
