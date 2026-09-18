@@ -1,166 +1,69 @@
-/* ChatGPT-inspired dark theme for the Open WebUI fork.
-   Keep this file selector-based so product features and RTL behavior remain intact. */
+/* Modern responsive theme */
 :root {
-  --cgpt-sidebar: #171717;
-  --cgpt-main: #212121;
-  --cgpt-elevated: #2f2f2f;
-  --cgpt-code: #0d0d0d;
-  --cgpt-text: #ececec;
-  --cgpt-muted: #b4b4b4;
-  --cgpt-accent: #10a37f;
-  --cgpt-accent-hover: #1a7f64;
-  --cgpt-border: rgba(255, 255, 255, 0.1);
-  --cgpt-focus: rgba(16, 163, 127, 0.28);
-  --cgpt-radius: 1.5rem;
+  --cf-bg: #0b0f19;
+  --cf-bg-elevated: #121826;
+  --cf-sidebar: #0e1422;
+  --cf-text: #e8eef9;
+  --cf-muted: #93a0b8;
+  --cf-accent: #6c8cff;
+  --cf-accent-2: #a78bfa;
+  --cf-success: #34d399;
+  --cf-border: rgba(148, 163, 184, 0.16);
+  --cf-radius: 16px;
 }
-
-html.dark,
-html.dark body,
-.dark body {
-  background: var(--cgpt-main) !important;
-  background-color: var(--cgpt-main) !important;
-  color: var(--cgpt-text) !important;
+html.dark body, .dark body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(108, 140, 255, 0.12), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(167, 139, 250, 0.1), transparent 50%),
+    var(--cf-bg) !important;
+  color: var(--cf-text) !important;
 }
-
 html.dark body::before {
   content: "";
-  position: fixed;
-  inset-inline: 0;
-  top: 0;
-  height: 2px;
-  background: var(--cgpt-accent);
-  z-index: 99999;
-  pointer-events: none;
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--cf-accent), var(--cf-accent-2), var(--cf-success));
+  z-index: 99999; pointer-events: none;
 }
-
-html.dark main,
-.dark main {
-  background: var(--cgpt-main) !important;
+html.dark aside, .dark aside, html.dark #sidebar, .dark #sidebar {
+  background: var(--cf-sidebar) !important;
+  border-inline-end: 1px solid var(--cf-border) !important;
 }
-
-html.dark aside,
-.dark aside,
-html.dark #sidebar,
-.dark #sidebar {
-  background: var(--cgpt-sidebar) !important;
-  border-inline-end: 1px solid var(--cgpt-border) !important;
+html.dark #sidebar-chat-item:hover {
+  background: rgba(108, 140, 255, 0.1) !important;
+  border-radius: 12px !important;
 }
-
-html.dark #sidebar-chat-item {
-  color: var(--cgpt-text);
-  border-radius: 0.5rem;
+html.dark main, .dark main { background: transparent !important; }
+html.dark textarea, .dark textarea {
+  background: var(--cf-bg-elevated) !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: var(--cf-radius) !important;
+  color: var(--cf-text) !important;
 }
-
-html.dark #sidebar-chat-item:hover,
-html.dark #sidebar-chat-item:focus-within {
-  background: rgba(255, 255, 255, 0.06) !important;
+html.dark textarea:focus, .dark textarea:focus {
+  border-color: #6c8cff !important;
+  box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.22) !important;
 }
-
-html.dark #message-input-container {
-  background: var(--cgpt-elevated) !important;
-  border: 1px solid var(--cgpt-border) !important;
-  border-radius: var(--cgpt-radius) !important;
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.08),
-    0 8px 24px rgba(0, 0, 0, 0.18) !important;
-  backdrop-filter: none !important;
-}
-
-html.dark #message-input-container:hover {
-  border-color: rgba(255, 255, 255, 0.14) !important;
-}
-
-html.dark #message-input-container:focus-within {
-  border-color: rgba(16, 163, 127, 0.58) !important;
-  box-shadow:
-    0 0 0 2px var(--cgpt-focus),
-    0 8px 24px rgba(0, 0, 0, 0.2) !important;
-}
-
-html.dark #chat-input-container,
-html.dark #chat-input,
-html.dark #chat-input .ProseMirror,
-html.dark #chat-input [contenteditable='true'] {
-  background: transparent !important;
-  color: var(--cgpt-text) !important;
-}
-
-html.dark #chat-input .ProseMirror:focus,
-html.dark #chat-input [contenteditable='true']:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-html.dark #chat-input .ProseMirror p.is-editor-empty:first-child::before,
-html.dark #chat-input [data-placeholder]::before,
-html.dark #chat-input [data-placeholder]::after {
-  color: var(--cgpt-muted) !important;
-}
-
-html.dark textarea,
-.dark textarea,
-html.dark input:not([type='checkbox']):not([type='radio']) {
-  color: var(--cgpt-text);
-}
-
-html.dark textarea:focus,
-.dark textarea:focus,
-html.dark input:not([type='checkbox']):not([type='radio']):focus {
-  border-color: rgba(16, 163, 127, 0.58) !important;
-  box-shadow: 0 0 0 2px var(--cgpt-focus);
-  outline: none;
-}
-
-html.dark button.bg-blue-600,
-.dark .bg-blue-600,
-html.dark #send-message-button:not(:disabled) {
-  background: var(--cgpt-accent) !important;
-  color: #ffffff !important;
-  border-color: transparent !important;
+html.dark button.bg-blue-600, .dark .bg-blue-600 {
+  background: linear-gradient(135deg, #6c8cff, #a78bfa) !important;
+  color: #fff !important;
   border-radius: 9999px !important;
 }
-
-html.dark button.bg-blue-600:hover,
-.dark .bg-blue-600:hover,
-html.dark #send-message-button:not(:disabled):hover {
-  background: var(--cgpt-accent-hover) !important;
+html.dark pre, html.dark .hljs {
+  background: #070b14 !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: 12px !important;
 }
-
-html.dark #send-message-button:disabled {
-  background: #4a4a4a !important;
-  color: var(--cgpt-muted) !important;
-  opacity: 0.72;
+html.dark [role="dialog"] {
+  background: #121826 !important;
+  border-radius: 20px !important;
 }
-
-html.dark :where(button, a, input, textarea, [role='button'], [tabindex]):focus-visible {
-  outline: 2px solid rgba(16, 163, 127, 0.78);
-  outline-offset: 2px;
+@media (max-width: 768px) {
+  html { font-size: 15px; }
+  html.dark textarea { border-radius: 14px !important; }
 }
-
-html.dark pre,
-html.dark .hljs {
-  background: var(--cgpt-code) !important;
-  border-color: var(--cgpt-border) !important;
-  border-radius: 0.75rem !important;
+@media (max-width: 480px) {
+  html { font-size: 14px; }
 }
-
-html.dark code {
-  color: var(--cgpt-text);
-}
-
-html.dark ::-webkit-scrollbar-thumb {
-  background-color: rgba(180, 180, 180, 0.35);
-}
-
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(180, 180, 180, 0.52);
-}
-
-html.dark ::selection {
-  background: rgba(16, 163, 127, 0.34);
-}
-
-html.dark .app-muted,
-html.dark .app-icon-muted {
-  color: var(--cgpt-muted);
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
 }
