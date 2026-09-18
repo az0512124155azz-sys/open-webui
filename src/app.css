@@ -147,7 +147,7 @@ textarea {
 }
 
 .ProseMirror:focus {
-	ooutline: none;
+	outline: none;
 }
 
 body {
@@ -156,6 +156,6 @@ body {
 }
 
 .dark body {
-	background: #171717;
-	color: #eee;
+	background: #212121;
+	color: #ececec;
 }
