@@ -1,0 +1,49 @@
+name: Sync Generated Frontend Files
+
+on:
+  push:
+    branches:
+      - feature/custom-fork-v1
+    paths:
+      - 'src/**'
+      - 'i18next-parser.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/sync-generated.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: feature/custom-fork-v1
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci --force
+
+      - name: Format frontend sources
+        run: npm run format
+
+      - name: Synchronize i18n catalogs
+        run: npm run i18n:parse
+
+      - name: Ensure generated files are synchronized
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'Generated files are already synchronized.'
+            exit 0
+          fi
+          echo 'Generated or formatted files are out of sync:'
+          git status --short
+          git diff --stat
+          exit 1

@@ -12,6 +12,9 @@ on:
     branches: [main, dev]
     paths-ignore: ['backend/**', 'pyproject.toml', 'uv.lock']
 
+permissions:
+  contents: read
+
 concurrency:
   group: frontend-${{ github.ref }}
   cancel-in-progress: true
@@ -24,13 +27,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install --force
+        run: npm ci --force
 
       - name: Verify code formatting
         run: npm run format
@@ -39,7 +44,15 @@ jobs:
         run: npm run i18n:parse
 
       - name: Ensure working tree is clean
-        run: git diff --exit-code
+        shell: bash
+        run: |
+          if ! git diff --quiet; then
+            echo 'Generated or formatted files are out of sync:'
+            git status --short
+            git diff --stat
+            git diff -- . ':(exclude)package-lock.json'
+            exit 1
+          fi
 
       - name: Production build
         run: npm run build

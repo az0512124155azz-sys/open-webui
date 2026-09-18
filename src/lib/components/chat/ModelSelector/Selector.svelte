@@ -1168,7 +1168,7 @@
 									listScrollTop = listContainer.scrollTop;
 								}}
 							>
-								<div style="height: {visibleStart * ITEM_HEIGHT}px;" />
+								<div style="height: {visibleStart * ITEM_HEIGHT}px;"></div>
 								{#each filteredItems.slice(visibleStart, visibleEnd) as item, i (item.value)}
 									{@const index = visibleStart + i}
 									<ModelItem
@@ -1187,7 +1187,7 @@
 										}}
 									/>
 								{/each}
-								<div style="height: {(filteredItems.length - visibleEnd) * ITEM_HEIGHT}px;" />
+								<div style="height: {(filteredItems.length - visibleEnd) * ITEM_HEIGHT}px;"></div>
 							</div>
 						{/if}
 
@@ -1351,11 +1351,11 @@
 						<div class="shrink-0 pb-1"></div>
 					{/if}
 
-					<div class="hidden w-[42rem]" />
-					<div class="hidden w-[28rem]" />
-					<div class="hidden w-[24rem]" />
-					<div class="hidden w-[22rem]" />
-					<div class="hidden w-[20rem]" />
+					<div class="hidden w-[42rem]"></div>
+					<div class="hidden w-[28rem]"></div>
+					<div class="hidden w-[24rem]"></div>
+					<div class="hidden w-[22rem]"></div>
+					<div class="hidden w-[20rem]"></div>
 				</slot>
 			</div>
 		</div>

@@ -8,6 +8,7 @@
 
 	import { createNewSkill, getSkills } from '$lib/apis/skills';
 	import SkillEditor from '$lib/components/workspace/Skills/SkillEditor.svelte';
+	import CreateSkillWithAI from '$lib/components/workspace/Skills/CreateSkillWithAI.svelte';
 
 	let skill: {
 		name: string;
@@ -33,11 +34,15 @@
 		}
 	};
 
+	const onAiSaved = async () => {
+		await skills.set(await getSkills(localStorage.token));
+		await goto('/workspace/skills');
+	};
+
 	onMount(async () => {
 		if (sessionStorage.skill) {
 			const _skill = JSON.parse(sessionStorage.skill);
 			sessionStorage.removeItem('skill');
-
 			clone = true;
 			skill = {
 				name: _skill.name || 'Skill',
@@ -51,6 +56,14 @@
 	});
 </script>
 
-{#key skill}
-	<SkillEditor {skill} {onSubmit} {clone} />
-{/key}
+<div class="space-y-6">
+	{#if !clone}
+		<div class="px-4 pt-4">
+			<CreateSkillWithAI on:saved={onAiSaved} />
+		</div>
+	{/if}
+
+	{#key skill}
+		<SkillEditor {skill} {onSubmit} {clone} />
+	{/key}
+</div>

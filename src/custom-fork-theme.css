@@ -1,0 +1,69 @@
+/* Modern responsive theme */
+:root {
+  --cf-bg: #0b0f19;
+  --cf-bg-elevated: #121826;
+  --cf-sidebar: #0e1422;
+  --cf-text: #e8eef9;
+  --cf-muted: #93a0b8;
+  --cf-accent: #6c8cff;
+  --cf-accent-2: #a78bfa;
+  --cf-success: #34d399;
+  --cf-border: rgba(148, 163, 184, 0.16);
+  --cf-radius: 16px;
+}
+html.dark body, .dark body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(108, 140, 255, 0.12), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(167, 139, 250, 0.1), transparent 50%),
+    var(--cf-bg) !important;
+  color: var(--cf-text) !important;
+}
+html.dark body::before {
+  content: "";
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--cf-accent), var(--cf-accent-2), var(--cf-success));
+  z-index: 99999; pointer-events: none;
+}
+html.dark aside, .dark aside, html.dark #sidebar, .dark #sidebar {
+  background: var(--cf-sidebar) !important;
+  border-inline-end: 1px solid var(--cf-border) !important;
+}
+html.dark #sidebar-chat-item:hover {
+  background: rgba(108, 140, 255, 0.1) !important;
+  border-radius: 12px !important;
+}
+html.dark main, .dark main { background: transparent !important; }
+html.dark textarea, .dark textarea {
+  background: var(--cf-bg-elevated) !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: var(--cf-radius) !important;
+  color: var(--cf-text) !important;
+}
+html.dark textarea:focus, .dark textarea:focus {
+  border-color: #6c8cff !important;
+  box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.22) !important;
+}
+html.dark button.bg-blue-600, .dark .bg-blue-600 {
+  background: linear-gradient(135deg, #6c8cff, #a78bfa) !important;
+  color: #fff !important;
+  border-radius: 9999px !important;
+}
+html.dark pre, html.dark .hljs {
+  background: #070b14 !important;
+  border: 1px solid var(--cf-border) !important;
+  border-radius: 12px !important;
+}
+html.dark [role="dialog"] {
+  background: #121826 !important;
+  border-radius: 20px !important;
+}
+@media (max-width: 768px) {
+  html { font-size: 15px; }
+  html.dark textarea { border-radius: 14px !important; }
+}
+@media (max-width: 480px) {
+  html { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

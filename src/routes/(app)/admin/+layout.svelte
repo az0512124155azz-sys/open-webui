@@ -17,7 +17,8 @@
 			await goto('/', { replaceState: true });
 		} else if (
 			!$config?.features?.enable_plugins &&
-			$page.url.pathname.includes('/admin/functions')
+			($page.url.pathname.includes('/admin/functions') ||
+				$page.url.pathname.includes('/admin/plugins'))
 		) {
 			await goto('/admin', { replaceState: true });
 		}
@@ -26,9 +27,6 @@
 </script>
 
 <svelte:head>
-	<!-- LICENSE covers this Open WebUI browser-title identifier.
-	Do not alter, remove, obscure, or replace it except as LICENSE permits:
-	https://docs.openwebui.com/license. -->
 	<title>
 		{$i18n.t('Admin Panel')} / {$WEBUI_NAME}
 	</title>
@@ -50,7 +48,7 @@
 						>
 							<button
 								id="sidebar-toggle-button"
-								class=" cursor-pointer flex rounded-lg hover:bg-gray-100 dark:hover:bg-gray-850 transition cursor-"
+								class=" cursor-pointer flex rounded-lg hover:bg-gray-100 dark:hover:bg-gray-850 transition"
 								aria-label={$showSidebar ? $i18n.t('Close Sidebar') : $i18n.t('Open Sidebar')}
 								on:click={() => {
 									showSidebar.set(!$showSidebar);
@@ -92,7 +90,22 @@
 									: 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'} transition select-none"
 								href="/admin/functions">{$i18n.t('Functions')}</a
 							>
+							<a
+								draggable="false"
+								class="min-w-fit px-1 text-sm {$page.url.pathname.includes('/admin/plugins')
+									? ''
+									: 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'} transition select-none"
+								href="/admin/plugins">Plugins</a
+							>
 						{/if}
+
+						<a
+							draggable="false"
+							class="min-w-fit px-1 text-sm {$page.url.pathname.includes('/admin/model-intelligence')
+								? ''
+								: 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'} transition select-none"
+							href="/admin/model-intelligence">Models Intel</a
+						>
 
 						<a
 							draggable="false"

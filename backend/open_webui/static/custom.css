@@ -1,0 +1,20 @@
+html.dark body {
+  background:
+    radial-gradient(1000px 500px at 0% 0%, rgba(108,140,255,.12), transparent 50%),
+    #0b0f19 !important;
+}
+html.dark #sidebar, html.dark aside {
+  background: #0e1422 !important;
+  border-inline-end: 1px solid rgba(148,163,184,.16) !important;
+}
+html.dark body::before {
+  content: "";
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, #6c8cff, #a78bfa, #34d399);
+  z-index: 99999; pointer-events: none;
+}
+html.dark textarea:focus {
+  border-color: #6c8cff !important;
+  box-shadow: 0 0 0 3px rgba(108,140,255,.2) !important;
+}
+@media (max-width: 768px) { html { font-size: 15px; } }

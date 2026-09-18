@@ -1,0 +1,95 @@
+name: Custom Fork QA
+
+on:
+  push:
+    branches: [feature/custom-fork-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: custom-fork-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend build and focused tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --force
+      - name: 3D parser tests
+        run: npx vitest run src/lib/utils/model3d.test.ts
+      - name: Svelte type check (custom paths)
+        run: |
+          set -euo pipefail
+          npm run check > /tmp/svelte-check.log 2>&1 || true
+          CUSTOM_GLOBS='src/lib/utils/model3d|src/lib/components/common/EnhancedFileModal|src/lib/components/common/Model3DPreview|src/lib/components/chat/Settings/Interface/TranslationSettings|src/lib/components/admin/Settings/Connections/OllamaPerformance|src/lib/components/admin/Settings/Connections/ManageOllamaModal|src/lib/components/admin/Settings/Models/Manage/ManageOllama|src/lib/components/chat/Settings/DataControls|src/lib/components/chat/Messages/TerminalOutputFileEnhanced|src/lib/apis/chats/memory|src/lib/components/common/FileItem|src/lib/apis/plugins|src/lib/apis/skills/generate|src/lib/apis/model-intelligence|src/lib/components/admin/Settings/Plugins|src/lib/components/admin/Settings/ModelIntelligence|src/lib/components/workspace/Skills/CreateSkillWithAI'
+          if grep -E 'Error:' /tmp/svelte-check.log | grep -E "$CUSTOM_GLOBS" > /tmp/custom-errors.txt; then
+            echo 'Custom-path svelte-check errors:'
+            cat /tmp/custom-errors.txt
+            exit 1
+          fi
+          echo 'No svelte-check errors in custom-touched paths.'
+          tail -3 /tmp/svelte-check.log || true
+      - name: Production build
+        run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+
+  backend:
+    name: Backend syntax and format
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install "ruff>=0.15.5"
+      - name: Compile custom Python modules
+        run: >-
+          python -m py_compile
+          backend/open_webui/routers/chats.py
+          backend/open_webui/routers/memories.py
+          backend/open_webui/routers/ollama.py
+          backend/open_webui/routers/plugins.py
+          backend/open_webui/routers/skills_ai.py
+          backend/open_webui/routers/model_intelligence.py
+          backend/open_webui/utils/hebrew_translation.py
+          backend/open_webui/utils/memory_chat_links.py
+          backend/open_webui/utils/plugin_registry.py
+          backend/open_webui/utils/model_intelligence.py
+          backend/open_webui/migrations/versions/c0f1a2b3c4d5_seed_hebrew_translation_filter.py
+          backend/open_webui/migrations/versions/c0f1a2b3c4d6_add_memory_source_chat_id.py
+      - name: Ruff custom backend files
+        run: >-
+          ruff check
+          backend/open_webui/routers/chats.py
+          backend/open_webui/routers/memories.py
+          backend/open_webui/routers/ollama.py
+          backend/open_webui/routers/plugins.py
+          backend/open_webui/routers/skills_ai.py
+          backend/open_webui/routers/model_intelligence.py
+          backend/open_webui/utils/hebrew_translation.py
+          backend/open_webui/utils/memory_chat_links.py
+          backend/open_webui/utils/plugin_registry.py
+          backend/open_webui/utils/model_intelligence.py
+
+  compose:
+    name: Compose validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate base compose
+        run: docker compose -f docker-compose.yaml config >/dev/null
+      - name: Validate NVIDIA overlay
+        run: docker compose -f docker-compose.yaml -f docker-compose.gpu.yaml config >/dev/null
+      - name: Validate AMD overlay
+        run: docker compose -f docker-compose.yaml -f docker-compose.amdgpu.yaml config >/dev/null

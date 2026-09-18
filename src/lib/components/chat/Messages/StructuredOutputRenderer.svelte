@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Collapsible from '$lib/components/common/Collapsible.svelte';
 	import ToolCallDisplay from '$lib/components/common/ToolCallDisplay.svelte';
-	import TerminalOutputFile from './TerminalOutputFile.svelte';
+	import TerminalOutputFileEnhanced from './TerminalOutputFileEnhanced.svelte';
 	import { resolveChatMessageToolCall } from '$lib/apis/chats';
 	import { settings } from '$lib/stores';
 	import { toast } from 'svelte-sonner';
@@ -41,9 +41,7 @@
 	let resolvingCallId = '';
 
 	const resolveToolCall = async (callId: string, approved: boolean) => {
-		if (!chatId || !messageId || !callId || resolvingCallId) {
-			return;
-		}
+		if (!chatId || !messageId || !callId || resolvingCallId) return;
 
 		resolvingCallId = callId;
 		try {
@@ -62,10 +60,7 @@
 		}
 	};
 
-	$: detailButtonClassName = `py-0.5 ${
-		compactPreview ? 'text-xs' : 'text-[0.9375rem]'
-	} text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition`;
-
+	$: detailButtonClassName = `py-0.5 ${compactPreview ? 'text-xs' : 'text-[0.9375rem]'} text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition`;
 	$: displayItems = buildOutputDisplayItems(output) as OutputDisplayItem[];
 </script>
 
@@ -164,7 +159,7 @@
 		</ConsecutiveDetailsGroup>
 	{:else if displayItem.type === 'file'}
 		{#if displayItem.item?.displayed || $settings?.terminalFileDisplay === 'inline'}
-			<TerminalOutputFile item={displayItem.item} {chatId} />
+			<TerminalOutputFileEnhanced item={displayItem.item} {chatId} />
 		{/if}
 	{:else}
 		{@const detailToken = displayItem.token}

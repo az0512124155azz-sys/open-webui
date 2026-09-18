@@ -4,20 +4,14 @@
 	invisibleDragImage.src =
 		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
-	/**
-	 * At most one chat hover preview may be open across all ChatItem instances.
-	 * bits-ui's safe-polygon close only re-evaluates on pointermove, so a
-	 * preview can be left open when the pointer stops on a neighboring row
-	 * while still inside the previous row's grace area; opening a preview
-	 * therefore force-closes whichever one is still up.
-	 */
+	/** At most one chat hover preview may be open across all ChatItem instances. */
 	let closeActiveHoverPreview: (() => void) | null = null;
 </script>
 
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
 	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { onMount, getContext, createEventDispatcher, tick } from 'svelte';
 	import { LinkPreview } from 'bits-ui';
 	import {
@@ -26,11 +20,11 @@
 		deleteChatById,
 		getAllTags,
 		getChatById,
-		getChatListByTagName,
 		markChatUnreadById,
 		updateChatById,
 		updateChatFolderIdById
 	} from '$lib/apis/chats';
+	import { getChatMemoryCount } from '$lib/apis/chats/memory';
 	import {
 		chatId,
 		chatTitle as _chatTitle,
@@ -60,39 +54,31 @@
 	import { getOutputText } from '$lib/components/chat/Messages/structuredOutput';
 
 	const i18n = getContext('i18n');
-
 	const dispatch = createEventDispatcher();
 
 	export let className = '';
-
 	export let id;
 	export let title;
 	export let createdAt: number | null = null;
 	export let updatedAt: number | null = null;
 	export let lastReadAt: number | null = null;
 	export let active = false;
-
 	export let selected = false;
 	export let shiftKey = false;
 	export let readonly = false;
-
 	export let ownerName: string | null = null;
 	export let ownerUserId: string | null = null;
 	export let onReadStateChange: (data: Record<string, unknown>) => void = () => {};
-
 	export let onDragEnd = () => {};
 
 	function formatTimeAgo(timestamp: number): string {
-		const now = Date.now();
-		const diff = now - timestamp * 1000; // timestamp is in seconds
-
+		const diff = Date.now() - timestamp * 1000;
 		const seconds = Math.floor(diff / 1000);
 		const minutes = Math.floor(seconds / 60);
 		const hours = Math.floor(minutes / 60);
 		const days = Math.floor(hours / 24);
 		const weeks = Math.floor(days / 7);
 		const years = Math.floor(days / 365);
-
 		if (years > 0) return $i18n.t('{{COUNT}}y', { COUNT: years, context: 'time_ago' });
 		if (weeks > 0) return $i18n.t('{{COUNT}}w', { COUNT: weeks, context: 'time_ago' });
 		if (days > 0) return $i18n.t('{{COUNT}}d', { COUNT: days, context: 'time_ago' });
@@ -102,16 +88,13 @@
 	}
 
 	let chat = null;
-
 	let mouseOver = false;
 	let focusWithin = false;
 	let menuOpen = false;
 	let openPreview = false;
 
 	const closeHoverPreview = () => {
-		if (openPreview) {
-			openPreview = false;
-		}
+		if (openPreview) openPreview = false;
 	};
 
 	$: if (openPreview && closeActiveHoverPreview !== closeHoverPreview) {
@@ -119,17 +102,9 @@
 		closeActiveHoverPreview = closeHoverPreview;
 	}
 
-	// Local state: tracks the last updatedAt seen while the user was viewing
-	// this chat.  Survives prop refreshes from sidebar data re-fetches that
-	// would overwrite the `lastReadAt` prop with a stale server value.
 	let viewedAt: number | null = null;
-
-	$: if (id === $chatId) {
-		viewedAt = updatedAt ?? Date.now() / 1000;
-	}
-
+	$: if (id === $chatId) viewedAt = updatedAt ?? Date.now() / 1000;
 	$: effectiveReadAt = Math.max(lastReadAt ?? 0, viewedAt ?? 0) || null;
-
 	$: unread =
 		id !== $chatId &&
 		!active &&
@@ -153,15 +128,9 @@
 	const selectChatHandler = (event?: MouseEvent) => {
 		openPreview = false;
 		dispatch('select');
-
-		if ($selectedFolder) {
-			selectedFolder.set(null);
-		}
-
-		// Optimistically mark as read in UI when clicked
+		if ($selectedFolder) selectedFolder.set(null);
 		unread = false;
 		lastReadAt = Date.now() / 1000;
-
 		if ($mobile) {
 			event?.preventDefault();
 			void goto(`/c/${id}`);
@@ -173,7 +142,6 @@
 		if (readonly) return;
 		e.preventDefault();
 		e.stopPropagation();
-
 		doubleClicked = true;
 		renameHandler();
 	};
@@ -192,7 +160,6 @@
 			return null;
 		});
 		if (!res) return;
-
 		viewedAt = null;
 		lastReadAt = res.last_read_at ?? 0;
 		onReadStateChange(res);
@@ -200,23 +167,15 @@
 
 	let showShareChatModal = false;
 	let confirmEdit = false;
-
 	let chatTitle = title;
 
 	const editChatTitle = async (id, title) => {
 		if (title === '') {
 			toast.error($i18n.t('Title cannot be an empty string.'));
 		} else {
-			await updateChatById(localStorage.token, id, {
-				title: title
-			});
-
-			if (id === $chatId) {
-				_chatTitle.set(title);
-			}
-
+			await updateChatById(localStorage.token, id, { title });
+			if (id === $chatId) _chatTitle.set(title);
 			await refreshChatList(localStorage.token, { refreshPinned: true });
-
 			dispatch('change');
 		}
 	};
@@ -226,65 +185,72 @@
 			toast.error($i18n.t('Access prohibited'));
 			return;
 		}
-
 		const res = await cloneChatById(
 			localStorage.token,
 			id,
-			$i18n.t('Clone of {{TITLE}}', {
-				TITLE: title
-			})
+			$i18n.t('Clone of {{TITLE}}', { TITLE: title })
 		).catch((error) => {
 			toast.error(`${error}`);
 			return null;
 		});
-
 		if (res) {
 			goto(`/c/${res.id}`);
-
 			await refreshChatList(localStorage.token, { refreshPinned: true });
 		}
 	};
 
 	let deleting = false;
+	let showDeleteConfirm = false;
+	let deleteMemoryCount = 0;
+	let deleteCascadeEnabled = false;
+	let deleteCountLoading = false;
+
+	const openDeleteConfirm = async () => {
+		if (deleting || deleteCountLoading) return;
+		deleteCountLoading = true;
+		deleteMemoryCount = 0;
+		deleteCascadeEnabled = $settings?.deleteChatMemories ?? false;
+		try {
+			const result = await getChatMemoryCount(localStorage.token, id);
+			deleteMemoryCount = Number(result?.count ?? 0);
+			deleteCascadeEnabled = Boolean(result?.cascade_enabled);
+		} catch (error) {
+			console.debug('Unable to count chat-linked memories before deletion:', error);
+		} finally {
+			deleteCountLoading = false;
+			showDeleteConfirm = true;
+		}
+	};
 
 	const deleteChatHandler = async (id) => {
 		if (deleting) return;
 		deleting = true;
-
 		const res = await deleteChatById(localStorage.token, id).catch((error) => {
 			toast.error(`${error}`);
 			return null;
 		});
-
 		if (res) {
 			tags.set(await getAllTags(localStorage.token));
 			if ($chatId === id) {
 				await goto('/');
-
 				await chatId.set('');
 				await tick();
 			}
-
 			dispatch('change');
 		}
-
 		deleting = false;
 	};
 
 	let archiving = false;
-
 	const archiveChatHandler = async (id) => {
 		if (archiving) return;
 		archiving = true;
-
 		try {
 			await archiveChatById(localStorage.token, id);
-
 			if ($chatId === id) {
 				await goto('/');
 				chatId.set('');
 			}
-
 			dispatch('change');
 			toast.success($i18n.t('Chat archived.'));
 		} catch (error) {
@@ -303,12 +269,9 @@
 					return null;
 				}
 			);
-
 			if (res) {
 				await refreshChatList(localStorage.token, { refreshPinned: true });
-
 				dispatch('change');
-
 				toast.success($i18n.t('Chat moved successfully'));
 			}
 		} else {
@@ -317,12 +280,8 @@
 	};
 
 	let itemElement;
-
 	let generating = false;
-
-	let ignoreBlur = false;
 	let doubleClicked = false;
-
 	let dragged = false;
 	let x = 0;
 	let y = 0;
@@ -330,82 +289,54 @@
 	const onDragStart = (event) => {
 		event.stopPropagation();
 		openPreview = false;
-
 		event.dataTransfer.setDragImage(invisibleDragImage, 0, 0);
-
-		// Set the data to be transferred
-		event.dataTransfer.setData(
-			'text/plain',
-			JSON.stringify({
-				type: 'chat',
-				id: id
-			})
-		);
+		event.dataTransfer.setData('text/plain', JSON.stringify({ type: 'chat', id }));
 		event.dataTransfer.setData('application/x-open-webui-drag', '');
-
 		dragged = true;
-		itemElement.style.opacity = '0.5'; // Optional: Visual cue to show it's being dragged
+		itemElement.style.opacity = '0.5';
 	};
 
 	const onDrag = (event) => {
 		event.stopPropagation();
-
 		x = event.clientX;
 		y = event.clientY;
 	};
 
 	const onDragEndHandler = (event) => {
 		event.stopPropagation();
-
-		itemElement.style.opacity = '1'; // Reset visual cue after drag
+		itemElement.style.opacity = '1';
 		dragged = false;
-
 		onDragEnd(event);
 	};
 
 	const onClickOutside = (event) => {
-		if (!itemElement.contains(event.target)) {
-			if (confirmEdit) {
-				if (chatTitle !== title) {
-					editChatTitle(id, chatTitle);
-				}
-
-				confirmEdit = false;
-				chatTitle = '';
-			}
+		if (!itemElement.contains(event.target) && confirmEdit) {
+			if (chatTitle !== title) editChatTitle(id, chatTitle);
+			confirmEdit = false;
+			chatTitle = '';
 		}
 	};
 
 	onMount(() => {
 		const el = itemElement;
 		if (!el) return;
-
 		document.addEventListener('click', onClickOutside, true);
 		el.addEventListener('dragstart', onDragStart);
 		el.addEventListener('drag', onDrag);
 		el.addEventListener('dragend', onDragEndHandler);
-
 		return () => {
 			document.removeEventListener('click', onClickOutside, true);
 			el.removeEventListener('dragstart', onDragStart);
 			el.removeEventListener('drag', onDrag);
 			el.removeEventListener('dragend', onDragEndHandler);
-
-			if (closeActiveHoverPreview === closeHoverPreview) {
-				closeActiveHoverPreview = null;
-			}
+			if (closeActiveHoverPreview === closeHoverPreview) closeActiveHoverPreview = null;
 		};
 	});
-
-	let showDeleteConfirm = false;
 
 	const chatTitleInputKeydownHandler = (e) => {
 		if (e.key === 'Enter') {
 			e.preventDefault();
-			setTimeout(() => {
-				const input = document.getElementById(`chat-title-input-${id}`);
-				if (input) input.blur();
-			}, 0);
+			setTimeout(() => document.getElementById(`chat-title-input-${id}`)?.blur(), 0);
 		} else if (e.key === 'Escape') {
 			e.preventDefault();
 			confirmEdit = false;
@@ -417,27 +348,18 @@
 		chatTitle = title;
 		confirmEdit = true;
 		openPreview = false;
-
 		await tick();
-
 		setTimeout(() => {
-			const input = document.getElementById(`chat-title-input-${id}`);
-			if (input) {
-				input.focus();
-				input.select();
-			}
+			const input = document.getElementById(`chat-title-input-${id}`) as HTMLInputElement | null;
+			input?.focus();
+			input?.select();
 		}, 0);
 	};
 
 	const generateTitleHandler = async () => {
 		generating = true;
 		chat = await getChatById(localStorage.token, id);
-
 		const chatContent = chat.chat;
-
-		// Build the active branch message list from the history tree.
-		// Fallback to the legacy flat messages array for older chats
-		// that haven't been migrated to the tree structure yet.
 		const history = chatContent?.history;
 		let messages = [];
 		if (history?.messages && history?.currentId) {
@@ -452,18 +374,12 @@
 			}));
 		}
 
-		// Resolve the model from the most recent assistant message in the
-		// active branch. This avoids using the stale top-level `models`
-		// array which may reference a model from an older edit.
 		let model = '';
-
-		// For the active chat, prefer the live dropdown selection.
 		if (id === $chatId) {
 			try {
 				model = JSON.parse(sessionStorage.selectedModels || '[]').find((m) => m) ?? '';
 			} catch {}
 		}
-
 		if (!model && history?.messages && history?.currentId) {
 			let currentId = history.currentId;
 			while (currentId) {
@@ -476,31 +392,20 @@
 				currentId = msg.parentId;
 			}
 		}
-
-		// Fallback to top-level models if no model was found in the history
-		if (!model) {
-			model = chatContent?.models?.at(0) ?? '';
-		}
-
+		if (!model) model = chatContent?.models?.at(0) ?? '';
 		chatTitle = '';
-
 		const generatedTitle = await generateTitle(localStorage.token, model, messages).catch(
 			(error) => {
 				toast.error(`${error}`);
 				return null;
 			}
 		);
-
 		if (generatedTitle) {
-			if (generatedTitle !== title) {
-				editChatTitle(id, generatedTitle);
-			}
-
+			if (generatedTitle !== title) editChatTitle(id, generatedTitle);
 			confirmEdit = false;
 		} else {
 			chatTitle = title;
 		}
-
 		generating = false;
 	};
 </script>
@@ -520,20 +425,11 @@
 			/>
 		</Tooltip>
 	{/if}
-
-	<!-- Loading spinner for active chat (left side) -->
-	{#if active}
-		<div class="shrink-0 self-center pr-2">
-			<Spinner className="size-3" />
-		</div>
-	{/if}
-
+	{#if active}<div class="shrink-0 self-center pr-2"><Spinner className="size-3" /></div>{/if}
 	<div class="flex self-center flex-1 w-full min-w-0">
-		{#if unread}
-			<div class="shrink-0 self-center pr-2.5 flex transition-opacity duration-300">
+		{#if unread}<div class="shrink-0 self-center pr-2.5 flex transition-opacity duration-300">
 				<div class="size-1.5 bg-sky-500 rounded-full"></div>
-			</div>
-		{/if}
+			</div>{/if}
 		<div
 			dir="auto"
 			class="text-left self-center overflow-hidden w-full h-5 truncate {unread
@@ -543,8 +439,6 @@
 			{title}
 		</div>
 	</div>
-
-	<!-- Time ago indicator -->
 	{#if (updatedAt ?? createdAt) && !showInlineActions && !($mobile && !readonly)}
 		<div class="shrink-0 self-center text-[0.625rem] text-gray-400 dark:text-gray-500 pl-2">
 			{formatTimeAgo((updatedAt ?? createdAt) as number)}
@@ -557,23 +451,35 @@
 <DeleteConfirmDialog
 	bind:show={showDeleteConfirm}
 	title={$i18n.t('Delete chat?')}
-	on:confirm={() => {
-		deleteChatHandler(id);
-	}}
+	on:confirm={() => deleteChatHandler(id)}
 >
-	<div class=" text-sm text-gray-500 flex-1 line-clamp-3">
-		{$i18n.t('This will delete')} <span class="  font-normal">{title}</span>.
+	<div class="text-sm text-gray-500 flex-1 space-y-1.5">
+		<div>{$i18n.t('This will delete')} <span class="font-normal">{title}</span>.</div>
+		{#if deleteMemoryCount > 0 && deleteCascadeEnabled}
+			<div class="font-medium text-red-500 dark:text-red-400">
+				{$i18n.t('{{COUNT}} linked memories will also be permanently deleted.', {
+					COUNT: deleteMemoryCount
+				})}
+			</div>
+		{:else if deleteMemoryCount > 0}
+			<div class="text-gray-400">
+				{$i18n.t(
+					'{{COUNT}} linked memories will be kept because memory deletion is disabled in Data Controls.',
+					{ COUNT: deleteMemoryCount }
+				)}
+			</div>
+		{:else}
+			<div class="text-gray-400">{$i18n.t('No linked memories will be deleted.')}</div>
+		{/if}
 	</div>
 </DeleteConfirmDialog>
 
 {#if dragged && x && y}
 	<DragGhost {x} {y}>
-		<div class=" bg-black/80 backdrop-blur-2xl px-2 py-1 rounded-lg w-fit max-w-40">
+		<div class="bg-black/80 backdrop-blur-2xl px-2 py-1 rounded-lg w-fit max-w-40">
 			<div class="flex items-center gap-1">
-				<ChatIcon className=" size-[1.125rem]" strokeWidth="1.5" />
-				<div class=" text-xs text-white line-clamp-1">
-					{title}
-				</div>
+				<ChatIcon className="size-[1.125rem]" strokeWidth="1.5" />
+				<div class="text-xs text-white line-clamp-1">{title}</div>
 			</div>
 		</div>
 	</DragGhost>
@@ -583,25 +489,17 @@
 <div
 	id="sidebar-chat-group"
 	bind:this={itemElement}
-	class=" w-full {className} relative group"
+	class="w-full {className} relative group"
 	draggable={!confirmEdit && !readonly}
-	on:mouseenter={() => {
-		mouseOver = true;
-	}}
-	on:mouseleave={() => {
-		mouseOver = false;
-	}}
-	on:focusin={() => {
-		focusWithin = true;
-	}}
-	on:focusout={() => {
-		focusWithin = false;
-	}}
+	on:mouseenter={() => (mouseOver = true)}
+	on:mouseleave={() => (mouseOver = false)}
+	on:focusin={() => (focusWithin = true)}
+	on:focusout={() => (focusWithin = false)}
 >
 	{#if confirmEdit}
 		<div
 			id="sidebar-chat-item"
-			class=" w-full flex justify-between rounded-xl px-2 py-1.5 {id === $chatId || confirmEdit
+			class="w-full flex justify-between rounded-xl px-2 py-1.5 {id === $chatId || confirmEdit
 				? ($settings?.highContrastMode ?? false)
 					? 'bg-black/[0.035] dark:bg-white/[0.06] selected'
 					: 'bg-black/[0.035] dark:bg-white/[0.045] selected'
@@ -609,14 +507,14 @@
 					? ($settings?.highContrastMode ?? false)
 						? 'bg-black/[0.035] dark:bg-white/[0.055] selected'
 						: 'bg-black/[0.035] dark:bg-white/[0.045] selected'
-					: 'hover:bg-gray-100 dark:hover:bg-gray-900 group-hover:bg-gray-100 dark:group-hover:bg-gray-900'}  whitespace-nowrap text-ellipsis relative transition {generating
+					: 'hover:bg-gray-100 dark:hover:bg-gray-900 group-hover:bg-gray-100 dark:group-hover:bg-gray-900'} whitespace-nowrap text-ellipsis relative transition {generating
 				? 'cursor-not-allowed'
 				: ''}"
 		>
 			<input
 				id="chat-title-input-{id}"
 				bind:value={chatTitle}
-				class=" bg-transparent w-full outline-hidden mr-10"
+				class="bg-transparent w-full outline-hidden mr-10"
 				placeholder={generating ? $i18n.t('Generating...') : ''}
 				disabled={generating}
 				on:keydown={chatTitleInputKeydownHandler}
@@ -624,15 +522,9 @@
 					if (doubleClicked) {
 						e.preventDefault();
 						e.stopPropagation();
-
 						await tick();
-						setTimeout(() => {
-							const input = document.getElementById(`chat-title-input-${id}`);
-							if (input) input.focus();
-						}, 0);
-
+						setTimeout(() => document.getElementById(`chat-title-input-${id}`)?.focus(), 0);
 						doubleClicked = false;
-						return;
 					}
 				}}
 			/>
@@ -644,10 +536,8 @@
 			href="/c/{id}"
 			aria-current={id === $chatId ? 'page' : undefined}
 			on:click={selectChatHandler}
-			draggable="false"
+			draggable="false">{@render chatItemContent()}</a
 		>
-			{@render chatItemContent()}
-		</a>
 	{:else}
 		<LinkPreview.Root
 			openDelay={300}
@@ -662,11 +552,8 @@
 				aria-current={id === $chatId ? 'page' : undefined}
 				onclick={selectChatHandler}
 				ondblclick={renameChatFromDoubleClick}
-				draggable="false"
+				draggable="false">{@render chatItemContent()}</LinkPreview.Trigger
 			>
-				{@render chatItemContent()}
-			</LinkPreview.Trigger>
-
 			<ChatHoverPreview
 				chatId={id}
 				title={chatTitle || title}
@@ -697,41 +584,28 @@
 							class="flex size-5 items-center justify-center self-center dark:hover:text-white transition disabled:cursor-not-allowed"
 							id="generate-title-button"
 							disabled={generating}
-							on:click={() => {
-								generateTitleHandler();
-							}}
+							on:click={generateTitleHandler}><SparklesIcon strokeWidth="1.5" /></button
 						>
-							<SparklesIcon strokeWidth="1.5" />
-						</button>
 					</Tooltip>
 				</div>
 			{:else if shiftKey && mouseOver}
-				<div class=" flex items-center self-center space-x-1.5">
+				<div class="flex items-center self-center space-x-1.5">
 					<Tooltip content={$i18n.t('Archive')} className="flex items-center">
 						<button
 							class="flex size-5 items-center justify-center self-center dark:hover:text-white transition disabled:cursor-not-allowed"
 							disabled={archiving}
-							on:click={() => {
-								archiveChatHandler(id);
-							}}
-							type="button"
+							on:click={() => archiveChatHandler(id)}
+							type="button"><ArchiveBoxIcon className="size-3.5" strokeWidth="1.7" /></button
 						>
-							<ArchiveBoxIcon className="size-3.5" strokeWidth="1.7" />
-						</button>
 					</Tooltip>
-
 					{#if $user?.role === 'admin' || ($user?.permissions?.chat?.delete ?? true)}
 						<Tooltip content={$i18n.t('Delete')}>
 							<button
-								class=" self-center dark:hover:text-white transition disabled:cursor-not-allowed"
-								disabled={deleting}
-								on:click={() => {
-									deleteChatHandler(id);
-								}}
-								type="button"
+								class="self-center dark:hover:text-white transition disabled:cursor-not-allowed"
+								disabled={deleting || deleteCountLoading}
+								on:click={openDeleteConfirm}
+								type="button"><GarbageBinIcon className="size-3.5" strokeWidth="1.7" /></button
 							>
-								<GarbageBinIcon className="size-3.5" strokeWidth="1.7" />
-							</button>
 						</Tooltip>
 					{/if}
 				</div>
@@ -739,20 +613,12 @@
 				<div class="flex self-center z-10 items-end">
 					<ChatMenu
 						chatId={id}
-						cloneChatHandler={() => {
-							cloneChatHandler(id);
-						}}
-						shareHandler={() => {
-							showShareChatModal = true;
-						}}
+						cloneChatHandler={() => cloneChatHandler(id)}
+						shareHandler={() => (showShareChatModal = true)}
 						{moveChatHandler}
-						archiveChatHandler={() => {
-							archiveChatHandler(id);
-						}}
+						archiveChatHandler={() => archiveChatHandler(id)}
 						{renameHandler}
-						deleteHandler={() => {
-							showDeleteConfirm = true;
-						}}
+						deleteHandler={openDeleteConfirm}
 						{markUnreadHandler}
 						onOpen={() => {
 							menuOpen = true;
@@ -762,31 +628,23 @@
 							menuOpen = false;
 							dispatch('unselect');
 						}}
-						onPinChange={async () => {
-							dispatch('change');
-						}}
+						onPinChange={async () => dispatch('change')}
 					>
 						<button
 							type="button"
 							aria-label="Chat Menu"
 							class="flex size-5 items-center justify-center self-center dark:hover:text-white transition m-0"
+							><MoreHorizontalIcon className="size-3.5" strokeWidth="2" /></button
 						>
-							<MoreHorizontalIcon className="size-3.5" strokeWidth="2" />
-						</button>
 					</ChatMenu>
-
 					{#if id === $chatId && ($user?.role === 'admin' || ($user?.permissions?.chat?.delete ?? true))}
-						<!-- Shortcut support using "delete-chat-button" id -->
 						<button
 							id="delete-chat-button"
 							aria-label={$i18n.t('Delete')}
 							class="hidden"
-							on:click={() => {
-								showDeleteConfirm = true;
-							}}
+							on:click={openDeleteConfirm}
+							><MoreHorizontalIcon className="size-3.5" strokeWidth="2" /></button
 						>
-							<MoreHorizontalIcon className="size-3.5" strokeWidth="2" />
-						</button>
 					{/if}
 				</div>
 			{/if}

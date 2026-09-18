@@ -149,26 +149,35 @@ from open_webui.routers import (
     automations,
     calendar,
     channels,
+    chat_intelligence,
     chats,
     configs,
     evaluations,
     files,
+    files_projects,
     folders,
     functions,
     groups,
     images,
+    job_queue,
     knowledge,
     memories,
+    model_intelligence,
     models,
     notes,
     notifications,
     ollama,
     openai,
     pipelines,
+    plugins,
+    privacy_recovery,
+    production_hardening,
     prompts,
     retrieval,
     scim,
+    search_offline,
     skills,
+    skills_ai,
     tasks,
     terminals,
     tools,
@@ -836,6 +845,12 @@ app.include_router(users.router, prefix='/api/v1/users', tags=['users'])
 
 app.include_router(channels.router, prefix='/api/v1/channels', tags=['channels'])
 app.include_router(chats.router, prefix='/api/v1/chats', tags=['chats'])
+app.include_router(chat_intelligence.router, prefix='/api/v1/chat-intelligence', tags=['chat-intelligence'])
+app.include_router(privacy_recovery.router, prefix='/api/v1/privacy', tags=['privacy'])
+app.include_router(files_projects.router, prefix='/api/v1/files-projects', tags=['files-projects'])
+app.include_router(search_offline.router, prefix='/api/v1/search', tags=['search'])
+app.include_router(job_queue.router, prefix='/api/v1/jobs', tags=['jobs'])
+app.include_router(production_hardening.router, prefix='/api/v1/hardening', tags=['hardening'])
 app.include_router(notes.router, prefix='/api/v1/notes', tags=['notes'])
 
 
@@ -845,6 +860,9 @@ app.include_router(knowledge.router, prefix='/api/v1/knowledge', tags=['knowledg
 app.include_router(prompts.router, prefix='/api/v1/prompts', tags=['prompts'])
 app.include_router(tools.router, prefix='/api/v1/tools', tags=['tools'])
 app.include_router(skills.router, prefix='/api/v1/skills', tags=['skills'])
+app.include_router(skills_ai.router, prefix='/api/v1/skills', tags=['skills'])
+app.include_router(plugins.router, prefix='/api/v1/plugins', tags=['plugins'])
+app.include_router(model_intelligence.router, prefix='/api/v1/model-intelligence', tags=['model-intelligence'])
 
 app.include_router(memories.router, prefix='/api/v1/memories', tags=['memories'])
 app.include_router(folders.router, prefix='/api/v1/folders', tags=['folders'])
