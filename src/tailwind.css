@@ -10,7 +10,7 @@
 	--font-primary: var(--font-sans);
 	--font-secondary: var(--font-sans);
 
-	/* ChatGPT-inspired neutrals — changes ALL Tailwind gray-* classes */
+	/* ChatGPT-inspired neutrals */
 	--color-gray-50: #f7f7f8;
 	--color-gray-100: #ececec;
 	--color-gray-200: #e5e5e5;
@@ -45,3 +45,41 @@
 		color: theme(--color-gray-100);
 	}
 }
+
+@layer base {
+	input[type='checkbox'] {
+		@apply appearance-none w-4 h-4 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-850 relative;
+	}
+
+	input[type='checkbox']:checked {
+		@apply bg-blue-600 border-blue-600;
+	}
+
+	input[type='checkbox']:after {
+		content: '';
+		display: block;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		transition: opacity 0.2s;
+		position: absolute;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+		background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M4 8l3 3l5-5"/></svg>')
+			center/80% no-repeat;
+	}
+
+	input[type='checkbox']:checked:after {
+		opacity: 1;
+	}
+}
+
+@layer utilities {
+	.font-primary,
+	.font-secondary {
+		font-family: var(--font-sans);
+	}
+}
+
+@custom-variant hover (&:hover);
